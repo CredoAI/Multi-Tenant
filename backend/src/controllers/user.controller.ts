@@ -1,0 +1,17 @@
+import { UserService } from '../services/users.service';
+import { ISignUp } from '../types/users';
+
+export class UserController {
+  static async signUp(data: Omit<ISignUp, 'id'>) {
+    return await UserService.signUp(data);
+  }
+  static async signUpWithGoogle(){
+    return await UserService.signUpWithGoogle()
+  }
+  static async login(data: Pick<ISignUp, 'email' | 'password' | 'authType'>) {
+    return await UserService.login(data);
+  }
+  static async refreshToken(refreshToken: string) {
+    return await UserService.refreshToken(refreshToken);
+  }
+}
