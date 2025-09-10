@@ -1,6 +1,8 @@
 import { appConfig } from '../config';
+import { UserTypes } from '../data/business-type';
 import { UsersModel } from '../models/users.model';
 import { ISignUp, User } from '../types/users';
+import { getEnv } from '../utils/getEnv';
 import { generateTokens, verifyToken } from '../utils/jwt';
 
 import { OAuth2Client } from 'google-auth-library';
@@ -40,7 +42,7 @@ export class UserService {
     };
   }
 
-  static async signUpWithGoogle() {
+  static async authenticateWithGoogle() {
     const scopes = [
       'https://www.googleapis.com/auth/gmail.readonly', // Gmail only
       'openid',
@@ -56,7 +58,8 @@ export class UserService {
     return { authUrl: url };
   }
 
-  static async exchangeGoogleAuthCode(code: string) {
+  static async exchangeGoogleSignUpCode(code: string) {
+    if (!code) throw new Error('auth code is required');
     // exchange code for tokens
     const { tokens } = await this.oauth2Client.getToken(code);
 
@@ -65,19 +68,89 @@ export class UserService {
     // verify ID token (this contains user profile info)
     const ticket = await this.oauth2Client.verifyIdToken({
       idToken: tokens.id_token!,
-      audience: process.env.GOOGLE_CLIENT_ID,
+      audience: appConfig.googleAuth.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
     if (!payload) throw new Error('Google login failed');
 
-    // payload will have: { sub, email, email_verified, name, picture }
     const userInfo = {
-      id: payload.sub,
-      email: payload.email,
-      verified: payload.email_verified,
-      name: payload.name,
-      picture: payload.picture,
+      email: payload.email!,
+      name: payload.name!,
+      userType: UserTypes.Owner,
+      password: 'goolge-user-password',
+    };
+
+    const user: User = await UsersModel.create(userInfo);
+
+    // JWT payload
+    const userPayload = {
+      id: user.id,
+      organizationId: user.organizationId || '',
+      email: user.email,
+      userType: user.userType,
+    };
+
+    // Generate tokens
+    const { accessToken, refreshToken, expiresIn } = generateTokens(userPayload);
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      tokens: {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        expires_in: expiresIn,
+      },
+    };
+  }
+
+  static async exchangeGoogleSignInCode(code: string) {
+    if (!code) throw new Error('auth code is required');
+    // 1. Exchange code for Google tokens
+    const { tokens } = await this.oauth2Client.getToken(code);
+    this.oauth2Client.setCredentials(tokens);
+
+    // 2. Verify ID token
+    const ticket = await this.oauth2Client.verifyIdToken({
+      idToken: tokens.id_token!,
+      audience: appConfig.googleAuth.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) throw new Error('Google login failed');
+
+    const email = payload.email!;
+
+    // 3. Check if user already exists
+    const user = await UsersModel.findOne({ where: { email } });
+
+    if (!user) throw new Error('User not found. Please sign up first.');
+
+    // 4. Generate your own app tokens
+    const userPayload = {
+      id: user.id,
+      organizationId: user.organizationId || '',
+      email: user.email,
+      userType: user.userType,
+    };
+
+    const { accessToken, refreshToken, expiresIn } = generateTokens(userPayload);
+
+    // 5. Return app user + tokens
+    return {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      tokens: {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        expires_in: expiresIn,
+      },
     };
   }
 

@@ -42,6 +42,60 @@ userRoute.get('/sign-up-with-google', async (req, res) => {
   }
 });
 
+userRoute.get('/sign-in-with-google', async (req, res) => {
+  try {
+    const data = await UserController.signInWithGoogle();
+    const response: APIResponseFormat<any> = {
+      message: 'google auth url created successfully',
+      data,
+    };
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
+
+userRoute.post('/exchange-google-auth-code-signup', async (req, res) => {
+  try {
+    const data = await UserController.exchangeGoogleAuthCodeForSignUp(req.body.code);
+    const response: APIResponseFormat<any> = {
+      message: 'google auth is successfully',
+      data,
+    };
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
+
+userRoute.post('/exchange-google-auth-code-signin', async (req, res) => {
+  try {
+    const data = await UserController.exchangeGoogleAuthCodeForSignIn(req.body.code);
+    const response: APIResponseFormat<any> = {
+      message: 'google auth is successfully',
+      data,
+    };
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
+
 userRoute.post('/login', async (req, res) => {
   try {
     const data = await UserController.login(req.body);
