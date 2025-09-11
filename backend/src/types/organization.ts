@@ -1,4 +1,4 @@
-import { BusinessType, WhatSappConnectionStatus } from '../data/business-type';
+import { BusinessType, WhatSappConnectionStatus } from '../data/data-types';
 
 export interface IOrganization {
   id: string; // uuid

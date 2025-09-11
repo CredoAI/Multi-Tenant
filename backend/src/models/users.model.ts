@@ -2,7 +2,7 @@ import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOpt
 import bcrypt from 'bcrypt';
 import { sequelize } from './db';
 import { DbModels } from '.';
-import { UserTypes } from '../data/business-type';
+import { UserTypes } from '../data/data-types';
 
 class UsersModel extends Model<
   InferAttributes<UsersModel>, // read attributes
@@ -12,7 +12,7 @@ class UsersModel extends Model<
   declare organizationId: string | null;
   declare name: string;
   declare email: string;
-  declare password: string; 
+  declare password: string;
   declare userType: `${UserTypes}`;
 
   // custom method

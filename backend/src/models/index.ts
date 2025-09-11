@@ -2,15 +2,18 @@ import { OrganizationsModel } from './organizations.model';
 import { BranchesModel } from './branches.model';
 import { UsersModel } from './users.model';
 import { sequelize } from './db';
+import { WhatSappSettingsModel } from './whatsapp-settings.model';
 
 interface DbModels {
   OrganizationsModel: typeof OrganizationsModel;
+  WhatSappSettingsModel: typeof WhatSappSettingsModel;
   BranchesModel: typeof BranchesModel;
   UsersModel: typeof UsersModel;
 }
 
 const models: DbModels = {
   OrganizationsModel,
+  WhatSappSettingsModel,
   BranchesModel,
   UsersModel,
 };

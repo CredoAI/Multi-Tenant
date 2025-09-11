@@ -1,5 +1,5 @@
 import { appConfig } from '../config';
-import { UserTypes } from '../data/business-type';
+import { UserTypes } from '../data/data-types';
 import { UsersModel } from '../models/users.model';
 import { ISignUp, User } from '../types/users';
 import { getEnv } from '../utils/getEnv';

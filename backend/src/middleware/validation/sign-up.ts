@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
-import { UserTypes } from '../../data/business-type';
+import { UserTypes } from '../../data/data-types';
 
 const supportedUserTypes = Object.values(UserTypes);
 

@@ -1,13 +1,10 @@
 import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
-import { supportedBusinessTypes, WhatSappConnectionStatus } from '../../data/business-type';
+import { supportedBusinessTypes } from '../../data/data-types';
 
 export const createOrganizationSchema = z.object({
+  name: z.string().trim(),
   businessType: z.enum(supportedBusinessTypes as any),
-  whatsappBusinessId: z.string().trim().optional(),
-  whatsappPhoneNumberId: z.string().trim().optional(),
-  whatsappStatus: z.enum(Object.values(WhatSappConnectionStatus) as any).optional(),
-  whatsappTemplates: z.array(z.string()).optional(),
   AIAssistantName: z.string().trim().optional(),
   brandTone: z.string().trim().optional(),
 });

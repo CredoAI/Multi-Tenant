@@ -1,18 +1,32 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from './db';
 import { DbModels } from '.';
-import { supportedBusinessTypes, WhatSappConnectionStatus } from '../data/business-type';
+import { BusinessType, supportedBusinessTypes } from '../data/data-types';
 
-class OrganizationsModel extends Model {
+class OrganizationsModel extends Model<
+  InferAttributes<OrganizationsModel>,
+  InferCreationAttributes<OrganizationsModel>
+> {
+  declare id: string;
+  declare ownerId: string;
+  declare name: string;
+  declare businessType: `${BusinessType}`;
+  declare brandTone: string;
+  declare AIAssistantName: string;
   static associate(models: DbModels) {
     //hasMany The foreign key is on the other model (the one being linked).
     this.hasMany(models.BranchesModel, { foreignKey: 'organizationId' });
 
-    //hasMany The foreign key is on the other model (the one being linked).
     // Organization has many users
     this.hasMany(models.UsersModel, {
       foreignKey: 'organizationId',
       as: 'users',
+    });
+
+    // Organization has many WABA
+    this.hasMany(models.WhatSappSettingsModel, {
+      foreignKey: 'organizationId',
+      as: 'Whatsappsettings',
     });
 
     // belongsTo → The foreign key is on this model (the one calling belongsTo).
@@ -29,16 +43,8 @@ OrganizationsModel.init(
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, primaryKey: true },
     ownerId: { type: DataTypes.UUID, allowNull: false }, // special owner link
     name: { type: DataTypes.STRING, allowNull: false },
-    brandTone: { type: DataTypes.STRING, defaultValue: '' },
     businessType: { type: DataTypes.ENUM, values: supportedBusinessTypes },
-    whatsappBusinessId: { type: DataTypes.STRING, allowNull: true },
-    whatsappPhoneNumberId: { type: DataTypes.STRING, allowNull: true },
-    whatsappStatus: {
-      type: DataTypes.ENUM,
-      values: Object.values(WhatSappConnectionStatus),
-      defaultValue: 'not-connected',
-    },
-    whatsappTemplates: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false, defaultValue: [] },
+    brandTone: { type: DataTypes.STRING, defaultValue: '' },
     AIAssistantName: { type: DataTypes.STRING, allowNull: true },
   },
   { sequelize, modelName: 'Organizations', timestamps: true }

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { connectDB } from './models';
 import { appConfig } from './config';
-import { route as organizationRoute } from './routes/organization.route';
+import { organizationRoute } from './routes/organization.route';
 import { userRoute } from './routes/users.route';
 
 const app = express();
