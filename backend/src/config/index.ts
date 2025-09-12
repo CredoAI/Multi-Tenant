@@ -6,6 +6,7 @@ export enum EnvList {
   PROD_DATABASE_URL = 'PROD_DATABASE_URL',
   PORT = 'PORT',
   NODE_ENV = 'NODE_ENV',
+  ENCRYPTION_SECRET = 'ENCRYPTION_SECRET',
   STRIPE_SECRET_KEY = 'STRIPE_SECRET_KEY',
   GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID',
   GOOGLE_CLIENT_SECRET = 'GOOGLE_CLIENT_SECRET',
@@ -21,6 +22,7 @@ const env = getEnv(EnvList.NODE_ENV);
 export const appConfig = {
   env,
   port: getEnv(EnvList.PORT) || 5000,
+  encryptionSecret: getEnv('ENCRYPTION_SECRET'),
   db: {
     url: env === 'dev' ? getEnv(EnvList.LOCAL_DATABASE_URL) : getEnv(EnvList.PROD_DATABASE_URL),
   },
