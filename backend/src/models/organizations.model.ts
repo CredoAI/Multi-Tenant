@@ -2,6 +2,7 @@ import { DataTypes, Model, InferAttributes, InferCreationAttributes } from 'sequ
 import { sequelize } from './db';
 import { DbModels } from '.';
 import { BusinessType, supportedBusinessTypes } from '../data/data-types';
+import { ModelNames } from './model-names';
 
 class OrganizationsModel extends Model<
   InferAttributes<OrganizationsModel>,
@@ -23,6 +24,12 @@ class OrganizationsModel extends Model<
       as: 'users',
     });
 
+    // Organization has many users
+    this.hasMany(models.ProductModel, {
+      foreignKey: 'organizationId',
+      as: 'products',
+    });
+
     // Organization has many WABA
     this.hasMany(models.WhatSappSettingsModel, {
       foreignKey: 'organizationId',
@@ -41,13 +48,21 @@ class OrganizationsModel extends Model<
 OrganizationsModel.init(
   {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, primaryKey: true },
-    ownerId: { type: DataTypes.UUID, allowNull: false }, // special owner link
+    ownerId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
+    }, // special owner link
     name: { type: DataTypes.STRING, allowNull: false },
     businessType: { type: DataTypes.ENUM, values: supportedBusinessTypes },
     brandTone: { type: DataTypes.STRING, defaultValue: '' },
     AIAssistantName: { type: DataTypes.STRING, allowNull: true },
   },
-  { sequelize, modelName: 'Organizations', timestamps: true }
+  { sequelize, modelName: ModelNames.Organizations, timestamps: true }
 );
 
 export { OrganizationsModel };

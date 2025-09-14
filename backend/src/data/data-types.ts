@@ -38,4 +38,9 @@ export enum UserTypes {
   Staff = 'staff', // Regular employee
 }
 
+export enum ProductStatusTypes {
+  ACTIVE = "active",
+  INACTIVE = "inactive"
+}
+
 export const supportedBusinessTypes = Object.values(BusinessType);

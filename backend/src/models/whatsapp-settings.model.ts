@@ -4,6 +4,7 @@ import { DbModels } from '.';
 import { WhatSappConnectionStatus } from '../data/data-types';
 import { IWhatSappSettings } from '../types/whatsapp-settings';
 import { encrypt } from '../utils/crypto-utils';
+import { ModelNames } from './model-names';
 
 class WhatSappSettingsModel
   extends Model<InferAttributes<WhatSappSettingsModel>, InferCreationAttributes<WhatSappSettingsModel>>
@@ -17,7 +18,7 @@ class WhatSappSettingsModel
   declare accessToken: string | null;
   declare token_type: string | null;
   declare isSubscribedToWebhook: boolean;
-  declare whatsappTemplates:CreationOptional<string[]>;
+  declare whatsappTemplates: CreationOptional<string[]>;
   static associate(models: DbModels) {
     // belongsTo → The foreign key is on this model (the one calling belongsTo).
     // A WABA belongs to one organization (employee/staff)
@@ -31,7 +32,16 @@ class WhatSappSettingsModel
 WhatSappSettingsModel.init(
   {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, primaryKey: true },
-    organizationId: { type: DataTypes.UUID, allowNull: true },
+    organizationId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: ModelNames.Organizations,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
     whatsappBusinessId: { type: DataTypes.STRING, allowNull: false },
     whatsappPhoneNumberIds: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false, defaultValue: [] },
     connectionStatus: {
@@ -46,7 +56,8 @@ WhatSappSettingsModel.init(
   },
   {
     sequelize,
-    tableName: 'Whatsappsettings',
+    tableName: ModelNames.Whatsappsettings,
+    timestamps: true,
     indexes: [
       {
         fields: ['organizationId'],

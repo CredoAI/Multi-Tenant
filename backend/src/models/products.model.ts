@@ -1,0 +1,78 @@
+import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import { sequelize } from './db';
+import { DbModels } from '.';
+import { ProductStatusTypes } from '../data/data-types';
+import { IProduct } from '../types/product';
+import { ModelNames } from './model-names';
+
+class ProductModel
+  extends Model<
+    InferAttributes<ProductModel>, // read attributes
+    InferCreationAttributes<ProductModel>
+  >
+  implements IProduct
+{
+  declare id: CreationOptional<string>;
+  declare sku: CreationOptional<string>;
+  declare organizationId: string;
+  declare name: string;
+  declare price: number;
+  declare description: string;
+  declare currency: string;
+  declare imageUrl: string;
+  declare metaProductId: string;
+  declare status: CreationOptional<`${ProductStatusTypes}`>;
+
+  static associate(models: DbModels) {
+    this.belongsTo(models.OrganizationsModel, {
+      foreignKey: 'organizationId',
+      as: 'organization',
+    });
+
+    this.hasMany(models.BranchInventoryModel, {
+      foreignKey: 'productId',
+      as: 'branchInventory',
+    });
+  }
+}
+
+ProductModel.init(
+  {
+    id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, primaryKey: true },
+    organizationId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: ModelNames.Organizations,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
+    sku: { type: DataTypes.STRING, allowNull: false, defaultValue: '' },
+    name: { type: DataTypes.STRING, allowNull: false },
+    price: { type: DataTypes.INTEGER, allowNull: false },
+    description: { type: DataTypes.STRING, allowNull: false },
+    currency: { type: DataTypes.STRING, allowNull: false },
+    imageUrl: { type: DataTypes.STRING, allowNull: false },
+    metaProductId: { type: DataTypes.STRING, allowNull: false },
+    status: {
+      type: DataTypes.ENUM,
+      values: [...Object.values(ProductStatusTypes)],
+      defaultValue: ProductStatusTypes.ACTIVE,
+    },
+  },
+  {
+    sequelize,
+    modelName: ModelNames.Products,
+    timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ['organizationId', 'sku'],
+      },
+    ],
+  }
+);
+
+export { ProductModel };

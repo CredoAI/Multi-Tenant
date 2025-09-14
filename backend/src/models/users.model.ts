@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { sequelize } from './db';
 import { DbModels } from '.';
 import { UserTypes } from '../data/data-types';
+import { ModelNames } from './model-names';
 
 class UsersModel extends Model<
   InferAttributes<UsersModel>, // read attributes
@@ -40,7 +41,16 @@ class UsersModel extends Model<
 UsersModel.init(
   {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, allowNull: false, primaryKey: true },
-    organizationId: { type: DataTypes.UUID, allowNull: true },
+    organizationId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: ModelNames.Organizations,
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    },
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, unique: true, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
@@ -48,7 +58,8 @@ UsersModel.init(
   },
   {
     sequelize,
-    modelName: 'Users',
+    modelName: ModelNames.Users,
+    timestamps: true,
     indexes: [
       {
         fields: ['id'], // index on id (though primary key is already indexed by default)
