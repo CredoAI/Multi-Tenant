@@ -9,6 +9,7 @@ import { zoneRoute } from './routes/zone.route';
 import { branchRoute } from './routes/branch.route';
 import { areaRoute } from './routes/area.route';
 import { productRoute } from './routes/product.route';
+import { subscriptionRoute } from './routes/subscription-plan.route';
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,9 @@ app.use('/api/organization/zone', zoneRoute);
 app.use('/api/organization/area', areaRoute);
 app.use('/api/organization/branch', branchRoute);
 app.use('/api/organization/product', productRoute);
+
+// app-user routes
+app.use('/api/app-user/subscription-plan', subscriptionRoute);
 
 const PORT = appConfig.port;
 app.listen(PORT, async () => {

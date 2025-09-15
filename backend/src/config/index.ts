@@ -7,6 +7,7 @@ export enum EnvList {
   PORT = 'PORT',
   NODE_ENV = 'NODE_ENV',
   ENCRYPTION_SECRET = 'ENCRYPTION_SECRET',
+  STRIPE_PUBLIC_KEY = 'STRIPE_PUBLIC_KEY',
   STRIPE_SECRET_KEY = 'STRIPE_SECRET_KEY',
   GOOGLE_CLIENT_ID = 'GOOGLE_CLIENT_ID',
   GOOGLE_CLIENT_SECRET = 'GOOGLE_CLIENT_SECRET',
@@ -27,7 +28,8 @@ export const appConfig = {
     url: env === 'dev' ? getEnv(EnvList.LOCAL_DATABASE_URL) : getEnv(EnvList.PROD_DATABASE_URL),
   },
   stripe: {
-    key: getEnv(EnvList.STRIPE_SECRET_KEY),
+    publicKey: getEnv(EnvList.STRIPE_PUBLIC_KEY),
+    secretKey: getEnv(EnvList.STRIPE_SECRET_KEY),
   },
   googleAuth: {
     GOOGLE_CLIENT_ID: getEnv(EnvList.GOOGLE_CLIENT_ID),
