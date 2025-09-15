@@ -43,4 +43,17 @@ export enum ProductStatusTypes {
   INACTIVE = "inactive"
 }
 
+export enum SubstriptionStatusTypes {
+  active = "active",
+  cancelled = "cancelled",
+  expired = "expired",
+  pending = "pending"
+}
+
+export enum CreditTransactionTypes {
+  credit_add = "creditAdd",
+  credit_use ="creditUse",
+  credit_expire = "creditExpire"
+}
+
 export const supportedBusinessTypes = Object.values(BusinessType);

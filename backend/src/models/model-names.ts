@@ -7,4 +7,9 @@ export enum ModelNames {
   Users = 'Users',
   Whatsappsettings = 'Whatsappsettings',
   Zones = 'Zones',
+  SubscriptionPlans = "SubscriptionPlans",
+  Subscriptions = "Subscriptions",
+  CreditBalance = "CreditsBalance",
+  CreditTransactions = "CreditTransactions",
+  UsageRecords = "UsageRecords"
 }

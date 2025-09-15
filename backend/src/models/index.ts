@@ -7,6 +7,11 @@ import { ProductModel } from './products.model';
 import { BranchInventoryModel } from './branch-inventory.model';
 import { ZoneModel } from './zones.model';
 import { AreaModel } from './area.model';
+import { SubscriptionPlanModel } from './subscription-plan.model';
+import { SubscriptionsModel } from './subscriptions.model';
+import { CreditBalanceModel } from './creditBalance.model';
+import { UsageRecordModel } from './usage-records.model';
+import { CreditTransactionsModel } from './creditTransaction.model';
 
 interface DbModels {
   OrganizationsModel: typeof OrganizationsModel;
@@ -17,6 +22,11 @@ interface DbModels {
   ZoneModel: typeof ZoneModel;
   AreaModel: typeof AreaModel;
   BranchInventoryModel: typeof BranchInventoryModel;
+  SubscriptionPlanModel: typeof SubscriptionPlanModel;
+  SubscriptionsModel: typeof SubscriptionsModel;
+  CreditBalanceModel: typeof CreditBalanceModel;
+  CreditTransactionsModel: typeof CreditTransactionsModel;
+  UsageRecordModel: typeof UsageRecordModel;
 }
 
 const models: DbModels = {
@@ -28,6 +38,11 @@ const models: DbModels = {
   ZoneModel,
   AreaModel,
   BranchInventoryModel,
+  SubscriptionPlanModel,
+  SubscriptionsModel,
+  CreditBalanceModel,
+  CreditTransactionsModel,
+  UsageRecordModel,
 };
 
 Object.values(models).forEach((model: any) => {
