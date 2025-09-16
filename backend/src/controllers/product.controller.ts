@@ -1,14 +1,15 @@
 import { ProductService } from '../services/product.service';
 import { Pagination } from '../types/common-types';
+import { File } from '../types/file';
 import { IProduct } from '../types/product';
 import { User } from '../types/users';
 
 export class ProductController {
-  static async createProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>) {
-    return await ProductService.createProduct(product, user);
+  static async createProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>, file:File) {
+    return await ProductService.createProduct(product, user, file);
   }
-  static async updateProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>) {
-    return await ProductService.updateProduct(product, user);
+  static async updateProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>, file:File) {
+    return await ProductService.updateProduct(product, user, file);
   }
   static async removeProduct(productId: string, user: Pick<User, 'id' | 'organizationId'>) {
     await ProductService.removeProduct(productId, user);

@@ -1,34 +1,44 @@
 import express from 'express';
+import multer from 'multer';
 import { authMiddleware } from '../middleware/authentication';
 import { APIResponseFormat } from '../types/apiTypes';
 import { errorLogger } from '../helpers/logger';
 import { ProductController } from '../controllers/product.controller';
+import { validatecreateProductSchemaBody } from '../middleware/validation/product';
 
 export const productRoute = express.Router();
+const storage = multer.memoryStorage(); // or diskStorage if you want to save the file
+const upload = multer({ storage });
 
-productRoute.post('/create-product', authMiddleware, async (req, res) => {
-  try {
-    const data = await ProductController.createProduct(req.body, req.user!);
-    const response: APIResponseFormat<any> = {
-      message: 'product created successfully',
-      data,
-    };
+productRoute.post(
+  '/create-product',
+  authMiddleware,
+  validatecreateProductSchemaBody(),
+  upload.single('file'),
+  async (req, res) => {
+    try {
+      const data = await ProductController.createProduct(req.body, req.user!, req.file!);
+      const response: APIResponseFormat<any> = {
+        message: 'product created successfully',
+        data,
+      };
 
-    res.status(201).json(response);
-  } catch (error: any) {
-    const response: APIResponseFormat<null> = {
-      message: error.message,
-      error: error,
-    };
-    errorLogger(error);
-    res.status(500).json(response);
+      res.status(201).json(response);
+    } catch (error: any) {
+      const response: APIResponseFormat<null> = {
+        message: error.message,
+        error: error,
+      };
+      errorLogger(error);
+      res.status(500).json(response);
+    }
   }
-});
+);
 
-productRoute.put('/products/:id', authMiddleware, async (req, res) => {
+productRoute.put('/products/:id', authMiddleware, upload.single('file'), async (req, res) => {
   try {
     const id = req.params.id;
-    const data = await ProductController.updateProduct({ ...req.body, id }, req.user!);
+    const data = await ProductController.updateProduct({ ...req.body, id }, req.user!, req.file!);
     const response: APIResponseFormat<any> = {
       message: 'product updated successfully',
       data,

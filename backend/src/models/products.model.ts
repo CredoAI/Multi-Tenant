@@ -22,6 +22,7 @@ class ProductModel
   declare imageUrl: string;
   declare metaProductId: string;
   declare status: CreationOptional<`${ProductStatusTypes}`>;
+  declare fileFullPath: string;
 
   static associate(models: DbModels) {
     this.belongsTo(models.OrganizationsModel, {
@@ -54,7 +55,8 @@ ProductModel.init(
     price: { type: DataTypes.INTEGER, allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false },
     currency: { type: DataTypes.STRING, allowNull: false },
-    imageUrl: { type: DataTypes.STRING, allowNull: false },
+    imageUrl: { type: DataTypes.STRING, allowNull: true, defaultValue: '' },
+    fileFullPath: { type: DataTypes.STRING, allowNull: true, defaultValue: '', comment: 'path to superbase storage' },
     metaProductId: { type: DataTypes.STRING, allowNull: false },
     status: {
       type: DataTypes.ENUM,

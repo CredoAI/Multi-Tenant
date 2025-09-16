@@ -1,14 +1,24 @@
+import { ImageUploadHelper } from '../helpers/image-upload';
+import { validateFile } from '../middleware/validation/file';
 import { ProductModel } from '../models/products.model';
 import { Pagination } from '../types/common-types';
+import { File } from '../types/file';
 import { IProduct } from '../types/product';
 import { User } from '../types/users';
 
 export class ProductService {
-  static async createProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>) {
+  static async createProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>, file: File) {
     if (!user.organizationId) throw new Error('kindly create an organization to continue');
-    return await ProductModel.create(product);
+    validateFile(file);
+    const manageImageFile = new ImageUploadHelper();
+    const createdProduct = await ProductModel.create(product as any);
+    const { imgUrl, fullPath } = await manageImageFile.uploadImage(file);
+    return await ProductModel.update(
+      { imageUrl: imgUrl, fileFullPath: fullPath },
+      { where: { id: createdProduct.id }, returning: true }
+    );
   }
-  static async updateProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>) {
+  static async updateProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>, file: File) {
     const { id, ...productWithOutId } = product;
     if (!id) throw new Error('product id is required');
     if (!user.organizationId) throw new Error('kindly create an organization to continue');

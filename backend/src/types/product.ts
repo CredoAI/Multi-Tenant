@@ -10,5 +10,6 @@ export interface IProduct {
   description: string;
   currency: string;
   metaProductId: string;
-  imageUrl: string;
+  imageUrl?: string;
+  fileFullPath?: string; // path in superbase storage
 }

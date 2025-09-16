@@ -16,6 +16,10 @@ export enum EnvList {
   META_APP_SECRET = 'META_APP_SECRET',
   META_APP_WHATSAPP_AUTH_CONFIG = 'META_APP_WHATSAPP_AUTH_CONFIG',
   META_APP_REDIRECT_URL = 'META_APP_REDIRECT_URL',
+  SUPERBASE_DB_PASSWORD = 'SUPERBASE_DB_PASSWORD',
+  SUPERBASE_PROJECT_API_KEY = 'SUPERBASE_PROJECT_API_KEY',
+  SUPERBASE_PROJECT_URL = 'SUPERBASE_PROJECT_URL',
+  SUPERBASE_STORAGE_BUCKET_NAME = 'SUPERBASE_STORAGE_BUCKET_NAME',
 }
 
 const env = getEnv(EnvList.NODE_ENV);
@@ -41,5 +45,12 @@ export const appConfig = {
     appSecret: getEnv('META_APP_SECRET'),
     authConfig: getEnv('META_APP_WHATSAPP_AUTH_CONFIG'),
     callbackUrl: getEnv('META_APP_REDIRECT_URL'),
+  },
+  superbase: {
+    storage: {
+      bucketName: getEnv('SUPERBASE_STORAGE_BUCKET_NAME'),
+      projectUrl: getEnv('SUPERBASE_PROJECT_URL'),
+      apiKey: getEnv('SUPERBASE_PROJECT_API_KEY'),
+    },
   },
 };
