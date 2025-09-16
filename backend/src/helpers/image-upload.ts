@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from "uuid"
 import { appConfig } from '../config';
 export class ImageUploadHelper {
   superbase: SupabaseClient;
@@ -11,7 +11,7 @@ export class ImageUploadHelper {
   async uploadImage(file: any) {
     const { data, error } = await this.superbase.storage
       .from(`${this.bucketName}`)
-      .upload(`${uuidv4()}.pdf`, file.buffer, {
+      .upload(`${uuidv4()}.png`, file.buffer, {
         cacheControl: '3600',
         upsert: false,
         contentType: file.mimetype,

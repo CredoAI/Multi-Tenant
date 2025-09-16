@@ -9,9 +9,14 @@ import { User } from '../types/users';
 export class ProductService {
   static async createProduct(product: IProduct, user: Pick<User, 'id' | 'organizationId'>, file: File) {
     if (!user.organizationId) throw new Error('kindly create an organization to continue');
-    validateFile(file);
+    const { valid, errors } = validateFile(file);
+    if (!valid) throw new Error(errors.join(', '));
     const manageImageFile = new ImageUploadHelper();
-    const createdProduct = await ProductModel.create(product as any);
+    const createdProduct = await ProductModel.create({
+      ...product,
+      organizationId: user.organizationId,
+      metaProductId: 'ddedde',
+    });
     const { imgUrl, fullPath } = await manageImageFile.uploadImage(file);
     return await ProductModel.update(
       { imageUrl: imgUrl, fileFullPath: fullPath },

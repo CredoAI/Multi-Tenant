@@ -1,17 +1,25 @@
-import { z } from "zod";
-
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-export function validateFile(file: any) {
-  const schema = z
-    .any()
-    .refine((f) => f && ALLOWED_MIME_TYPES.includes(f.mimetype), {
-      message: "Invalid file type. Only JPEG and PNG are allowed.",
-    })
-    .refine((f) => f && f.size <= MAX_FILE_SIZE, {
-      message: "File size must be less than 5MB.",
-    });
+function validateFile(file: any) {
+  const errors: string[] = [];
 
-  return schema.parse(file); // will throw ZodError if invalid
+  if (!file) {
+    errors.push("File is required.");
+    return { valid: false, errors };
+  }
+
+  if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+    errors.push("Invalid file type. Only JPEG and PNG are allowed.");
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    errors.push("File size must be less than 5MB.");
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
 }
+export { validateFile };

@@ -18,11 +18,11 @@ class ProductModel
   declare name: string;
   declare price: number;
   declare description: string;
-  declare currency: string;
-  declare imageUrl: string;
+  declare currency: CreationOptional<string>;
+  declare imageUrl: CreationOptional<string>;
   declare metaProductId: string;
   declare status: CreationOptional<`${ProductStatusTypes}`>;
-  declare fileFullPath: string;
+  declare fileFullPath: CreationOptional<string>;
 
   static associate(models: DbModels) {
     this.belongsTo(models.OrganizationsModel, {
@@ -52,9 +52,9 @@ ProductModel.init(
     },
     sku: { type: DataTypes.STRING, allowNull: false, defaultValue: '' },
     name: { type: DataTypes.STRING, allowNull: false },
-    price: { type: DataTypes.INTEGER, allowNull: false },
+    price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false },
-    currency: { type: DataTypes.STRING, allowNull: false },
+    currency: { type: DataTypes.STRING, allowNull: false, defaultValue: 'USD' },
     imageUrl: { type: DataTypes.STRING, allowNull: true, defaultValue: '' },
     fileFullPath: { type: DataTypes.STRING, allowNull: true, defaultValue: '', comment: 'path to superbase storage' },
     metaProductId: { type: DataTypes.STRING, allowNull: false },
@@ -70,7 +70,6 @@ ProductModel.init(
     timestamps: true,
     indexes: [
       {
-        unique: true,
         fields: ['organizationId', 'sku'],
       },
     ],

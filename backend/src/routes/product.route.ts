@@ -13,8 +13,8 @@ const upload = multer({ storage });
 productRoute.post(
   '/create-product',
   authMiddleware,
-  validatecreateProductSchemaBody(),
   upload.single('file'),
+  validatecreateProductSchemaBody(),
   async (req, res) => {
     try {
       const data = await ProductController.createProduct(req.body, req.user!, req.file!);
