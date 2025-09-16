@@ -11,5 +11,5 @@ export interface IProduct {
   currency: string;
   metaProductId: string;
   imageUrl?: string;
-  fileFullPath?: string; // path in superbase storage
+  filePath?: string; // path in superbase storage
 }

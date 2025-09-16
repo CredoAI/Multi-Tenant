@@ -17,9 +17,9 @@ export class ProductService {
       organizationId: user.organizationId,
       metaProductId: 'ddedde',
     });
-    const { imgUrl, fullPath } = await manageImageFile.uploadImage(file);
+    const { imgUrl, path } = await manageImageFile.uploadImage(file);
     return await ProductModel.update(
-      { imageUrl: imgUrl, fileFullPath: fullPath },
+      { imageUrl: imgUrl, filePath: path },
       { where: { id: createdProduct.id }, returning: true }
     );
   }

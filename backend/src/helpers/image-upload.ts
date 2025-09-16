@@ -21,13 +21,13 @@ export class ImageUploadHelper {
       throw error;
     }
 
-    const imgUrl = this.getPublicUrl(data.fullPath);
+    const imgUrl = this.getPublicUrl(data.path);
 
     return { ...data, imgUrl };
   }
 
-   getPublicUrl(fullPath: string): string {
-    const { data } = this.superbase.storage.from(`${this.bucketName}`).getPublicUrl(fullPath);
+   getPublicUrl(path: string): string {
+    const { data } = this.superbase.storage.from(`${this.bucketName}`).getPublicUrl(path);
     return data.publicUrl;
   }
 
