@@ -34,6 +34,8 @@ export const appConfig = {
   stripe: {
     publicKey: getEnv(EnvList.STRIPE_PUBLIC_KEY),
     secretKey: getEnv(EnvList.STRIPE_SECRET_KEY),
+    successUrl:"http://localhost:3000/success",
+    cancelUrl:"http://localhost:3000/cancel"
   },
   googleAuth: {
     GOOGLE_CLIENT_ID: getEnv(EnvList.GOOGLE_CLIENT_ID),
