@@ -11,5 +11,7 @@ export enum ModelNames {
   Subscriptions = "Subscriptions",
   CreditBalance = "CreditsBalance",
   CreditTransactions = "CreditTransactions",
-  UsageRecords = "UsageRecords"
+  UsageRecords = "UsageRecords",
+  ProductOptions = "ProductOptions",
+  ProductOptionChoices = "ProductOptionChoices"
 }

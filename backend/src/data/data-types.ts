@@ -39,21 +39,26 @@ export enum UserTypes {
 }
 
 export enum ProductStatusTypes {
-  ACTIVE = "active",
-  INACTIVE = "inactive"
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
 }
 
 export enum SubstriptionStatusTypes {
-  active = "active",
-  cancelled = "cancelled",
-  expired = "expired",
-  pending = "pending"
+  active = 'active',
+  cancelled = 'cancelled',
+  expired = 'expired',
+  pending = 'pending',
 }
 
 export enum CreditTransactionTypes {
-  credit_add = "creditAdd",
-  credit_use ="creditUse",
-  credit_expire = "creditExpire"
+  credit_add = 'creditAdd',
+  credit_use = 'creditUse',
+  credit_expire = 'creditExpire',
+}
+
+export enum ProductOptionTypes {
+  SINGLE = 'single',
+  MULTIPLE = 'multiple',
 }
 
 export const supportedBusinessTypes = Object.values(BusinessType);
