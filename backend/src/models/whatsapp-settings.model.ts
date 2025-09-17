@@ -19,6 +19,7 @@ class WhatSappSettingsModel
   declare token_type: string | null;
   declare isSubscribedToWebhook: boolean;
   declare whatsappTemplates: CreationOptional<string[]>;
+  declare catalogId: CreationOptional<string>;
   static associate(models: DbModels) {
     // belongsTo → The foreign key is on this model (the one calling belongsTo).
     // A WABA belongs to one organization (employee/staff)
@@ -53,6 +54,7 @@ WhatSappSettingsModel.init(
     token_type: { type: DataTypes.STRING, allowNull: true },
     isSubscribedToWebhook: { type: DataTypes.BOOLEAN, allowNull: false },
     whatsappTemplates: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false, defaultValue: [] },
+    catalogId: { type: DataTypes.STRING, defaultValue: '' },
   },
   {
     sequelize,

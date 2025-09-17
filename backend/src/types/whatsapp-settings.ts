@@ -9,8 +9,9 @@ export interface IWhatSappSettings {
   connectionStatus: `${WhatSappConnectionStatus}`;
   accessToken: string | null;
   token_type: string | null;
-  isSubscribedToWebhook: boolean
+  isSubscribedToWebhook: boolean;
   whatsappTemplates: string[];
+  catalogId?: string;
 }
 
 export interface WhatSappAuthPayload {
