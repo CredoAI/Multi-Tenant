@@ -10,6 +10,8 @@ import { branchRoute } from './routes/branch.route';
 import { areaRoute } from './routes/area.route';
 import { productRoute } from './routes/product.route';
 import { subscriptionRoute } from './routes/subscription-plan.route';
+import { productOptionRoute } from './routes/product-option.route';
+import { productOptionChoiceRoute } from './controllers/productOption-choice.route';
 
 const app = express();
 app.use(express.json());
@@ -22,6 +24,8 @@ app.use('/api/organization/zone', zoneRoute);
 app.use('/api/organization/area', areaRoute);
 app.use('/api/organization/branch', branchRoute);
 app.use('/api/organization/product', productRoute);
+app.use('/api/organization/product-option', productOptionRoute);
+app.use('/api/organization/product-option-choice', productOptionChoiceRoute);
 
 // app-user routes
 app.use('/api/app-user/subscription-plan', subscriptionRoute);

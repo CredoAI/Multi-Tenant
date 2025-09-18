@@ -61,4 +61,32 @@ export enum ProductOptionTypes {
   MULTIPLE = 'multiple',
 }
 
+export enum NotificationPriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  URGENT = 'urgent'
+}
+
+export enum NotificationStatus {
+  UNREAD = 'unread',
+  READ = 'read',
+  ARCHIVED = 'archived',
+  DISMISSED = 'dismissed'
+}
+
+export enum RequestStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  PROCESSING = 'processing',
+  COMPLETED = 'completed'
+}
+
+export enum UserRole {
+  TENANT_ADMIN = 'tenant_admin',
+  TENANT_USER = 'tenant_user',
+  APP_ADMIN = 'app_admin'
+}
+
 export const supportedBusinessTypes = Object.values(BusinessType);

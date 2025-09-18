@@ -1,0 +1,61 @@
+import express from 'express';
+import { errorLogger } from '../helpers/logger';
+import { APIResponseFormat } from '../types/apiTypes';
+import { ProductOptionController } from '../controllers/product-option.controller';
+export const productOptionRoute = express.Router();
+
+productOptionRoute.post('/create', async (req, res) => {
+  try {
+    const data = await ProductOptionController.create(req.body, req.user!);
+    const response: APIResponseFormat<any> = {
+      message: 'product option created successfully',
+      data,
+    };
+
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
+
+productOptionRoute.put('/update', async (req, res) => {
+  try {
+    const data = await ProductOptionController.update(req.body);
+    const response: APIResponseFormat<any> = {
+      message: 'product option updated successfully',
+      data,
+    };
+
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
+
+productOptionRoute.delete('/delete/:id', async (req, res) => {
+  try {
+    const data = await ProductOptionController.remove(req.params.id);
+    const response: APIResponseFormat<any> = {
+      message: 'product option deleted successfully',
+      data,
+    };
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
