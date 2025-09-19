@@ -1,13 +1,20 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
+import App from '../App';
+import TenantRoutes from './TenantRoutes';
+import AdminRoutes from './AdminRoutes';
 
 const router = createBrowserRouter([
   {
+    path: '/',
+    element: <App />,
+  },
+  {
     path: '/tenant/*',
-    element: <div>Tenant routes</div>,
+    element: <TenantRoutes />,
   },
   {
     path: '/admin/*',
-    element: <div>Admin routes</div>,
+    element: <AdminRoutes />,
   },
   {
     path: '/auth/*',
