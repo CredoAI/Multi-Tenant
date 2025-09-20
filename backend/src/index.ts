@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
+import cookieParser from "cookie-parser";
 import { connectDB } from './models';
 import { appConfig } from './config';
 import { organizationRoute } from './routes/organization.route';
@@ -14,6 +16,8 @@ import { productOptionRoute } from './routes/product-option.route';
 import { productOptionChoiceRoute } from './controllers/productOption-choice.route';
 
 const app = express();
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 
 // routes

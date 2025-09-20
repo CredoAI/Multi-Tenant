@@ -92,7 +92,7 @@ export class UserService {
     };
 
     // Generate tokens
-    const { accessToken, refreshToken, expiresIn } = generateTokens(userPayload);
+    const { accessToken, refreshToken, expires_in } = generateTokens(userPayload);
     return {
       user: {
         id: user.id,
@@ -102,7 +102,7 @@ export class UserService {
       tokens: {
         access_token: accessToken,
         refresh_token: refreshToken,
-        expires_in: expiresIn,
+        expires_in: expires_in,
       },
     };
   }
@@ -137,7 +137,7 @@ export class UserService {
       userType: user.userType,
     };
 
-    const { accessToken, refreshToken, expiresIn } = generateTokens(userPayload);
+    const { accessToken, refreshToken, expires_in } = generateTokens(userPayload);
 
     // 5. Return app user + tokens
     return {
@@ -149,7 +149,7 @@ export class UserService {
       tokens: {
         access_token: accessToken,
         refresh_token: refreshToken,
-        expires_in: expiresIn,
+        expires_in: expires_in,
       },
     };
   }
@@ -195,12 +195,18 @@ export class UserService {
       userType: decoded.userType,
     };
 
-    const { accessToken, refreshToken: newRefresh, expiresIn } = generateTokens(payload);
+    const { accessToken, refreshToken: newRefresh, expires_in } = generateTokens(payload);
 
     return {
       access_token: accessToken,
       refresh_token: newRefresh,
-      expires_in: expiresIn,
+      expires_in: expires_in,
     };
+  }
+
+  static async getCurrentUser(user: User) {
+    const currentUser = await UsersModel.findByPk(user.id);
+    if (!currentUser) throw new Error('User not found');
+    return currentUser;
   }
 }

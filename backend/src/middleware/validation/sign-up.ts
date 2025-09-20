@@ -8,7 +8,7 @@ export const signUpSchema = z.object({
   name: z.string().trim(),
   email: z.string().trim().email('invalid email address'),
   password: z.string().trim(),
-  userType: z.enum(supportedUserTypes as any),
+  userType: z.enum(supportedUserTypes as any).optional(),
 });
 
 export const validateSignUpSchema = () => {

@@ -1,5 +1,5 @@
 import { UserService } from '../services/users.service';
-import { ISignUp } from '../types/users';
+import { ISignUp, User } from '../types/users';
 
 export class UserController {
   static async signUp(data: Omit<ISignUp, 'id'>) {
@@ -22,5 +22,8 @@ export class UserController {
   }
   static async refreshToken(refreshToken: string) {
     return await UserService.refreshToken(refreshToken);
+  }
+  static async getCurrentUser(user: User) {
+    return await UserService.getCurrentUser(user);
   }
 }

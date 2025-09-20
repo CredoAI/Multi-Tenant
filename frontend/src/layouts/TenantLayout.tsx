@@ -6,7 +6,6 @@ type TenantLayoutProps = {
 export const TenantLayout = ({ children }: TenantLayoutProps) => {
   return (
     <main>
-      <h1>welcome to tenant layout</h1>
       <div>{children}</div>
     </main>
   );
