@@ -15,4 +15,5 @@ export enum ModelNames {
   ProductOptions = 'ProductOptions',
   ProductOptionChoices = 'ProductOptionChoices',
   Notifications = 'Notifications',
+  Request = "Request"
 }

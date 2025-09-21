@@ -1,19 +1,25 @@
-import { Navigate, Route, Routes } from 'react-router';
+import { Navigate, Route, Routes, useLoaderData } from 'react-router';
 import { TenantLayout } from '../layouts/TenantLayout';
 import { PageRoutes } from '.';
-import CreateOrganizationPage from '../pages/tenant/CreateOrganization';
+import { RootLoaderWrapper } from '../contexts/TenantContext';
+import SettingsPage from '../pages/tenant/Settings';
 
 export default function TenantRoutes() {
+  const data = useLoaderData();
   return (
-    <TenantLayout>
-      <Routes>
-        <Route path="/" element={<Navigate to={PageRoutes.APP_DASHBOARD} />} />
-        <Route path={PageRoutes.APP_DASHBOARD} element={<div>dashboard page here</div>} />
-        <Route path={PageRoutes.CREATE_ORGANIZATION} element={<CreateOrganizationPage />} />
-        <Route path="orders" element={<div>dashboard page here</div>} />
-        <Route path="settings" element={<div>settings page here</div>} />
-      </Routes>
-    </TenantLayout>
+    <RootLoaderWrapper data={data}>
+      <TenantLayout>
+        <Routes>
+          <Route path="/" element={<Navigate to={PageRoutes.APP_DASHBOARD} />} />
+          <Route path={PageRoutes.APP_DASHBOARD} element={<div>dashboard page here</div>} />
+          <Route path={PageRoutes.ORDERS} element={<div>ORDERS page here</div>} />
+          <Route path={PageRoutes.PRODUCTS} element={<div>PRODUCTS page here</div>} />
+          <Route path={PageRoutes.INVENTORY} element={<div>INVENTORY page here</div>} />
+          <Route path={PageRoutes.CUSTOMERS} element={<div>CUSTOMERS page here</div>} />
+          <Route path={PageRoutes.BILLING} element={<div>BILLING page here</div>} />
+          <Route path={PageRoutes.SETTINGS} element={<SettingsPage />} />
+        </Routes>
+      </TenantLayout>
+    </RootLoaderWrapper>
   );
 }
-// /app/create-organization

@@ -4,13 +4,21 @@ import App from '../App';
 import TenantRoutes from './TenantRoutes';
 import AdminRoutes from './AdminRoutes';
 import AuthRoutes from './AuthRoute';
+import { contextLoader } from '../contexts/TenantContext';
 
 export const PageRoutes = {
   LOGIN: 'sign-in',
   SIGNUP: 'sign-up',
   FORGOT_PASSWORD: 'forgot-password',
-  APP_DASHBOARD: 'dashboard',
   CREATE_ORGANIZATION: 'create-organization',
+  APP_DASHBOARD: 'dashboard',
+  ORDERS: 'orders',
+  SETTINGS: 'settings',
+  PRODUCTS: 'products',
+  INVENTORY: 'inventory',
+  CUSTOMERS: 'customers',
+  BILLING: 'billing',
+  ADMIN_DASHBOARD: 'dashboard',
 } as const;
 
 const router = createBrowserRouter([
@@ -21,6 +29,7 @@ const router = createBrowserRouter([
   {
     path: '/app/*',
     element: <TenantRoutes />,
+    loader: contextLoader,
   },
   {
     path: '/app/auth/*',
@@ -39,7 +48,7 @@ const router = createBrowserRouter([
 export function AppRoutes() {
   return (
     <RecoilRoot>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </RecoilRoot>
   );
 }

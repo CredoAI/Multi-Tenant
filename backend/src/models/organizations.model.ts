@@ -3,11 +3,12 @@ import { sequelize } from './db';
 import { DbModels } from '.';
 import { BusinessType, supportedBusinessTypes } from '../data/data-types';
 import { ModelNames } from './model-names';
+import { IOrganization } from '../types/organization';
 
-class OrganizationsModel extends Model<
-  InferAttributes<OrganizationsModel>,
-  InferCreationAttributes<OrganizationsModel>
-> {
+class OrganizationsModel
+  extends Model<InferAttributes<OrganizationsModel>, InferCreationAttributes<OrganizationsModel>>
+  implements IOrganization
+{
   declare id: string;
   declare ownerId: string;
   declare name: string;
@@ -33,7 +34,17 @@ class OrganizationsModel extends Model<
     // Organization has many WABA
     this.hasMany(models.WhatSappSettingsModel, {
       foreignKey: 'organizationId',
-      as: 'Whatsappsettings',
+      as: 'whatsappsettings',
+    });
+
+    this.hasMany(models.NotificationModel, {
+      foreignKey: 'organizationId',
+      as: 'notifications',
+    });
+
+    this.hasMany(models.RequestModel, {
+      foreignKey: 'organizationId',
+      as: 'requests',
     });
 
     // belongsTo → The foreign key is on this model (the one calling belongsTo).

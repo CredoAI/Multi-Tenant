@@ -8,6 +8,8 @@ import { User } from '../types/users';
 export class OrganizationService {
   constructor() {}
   static async createOrganization(data: Omit<IOrganization, 'id'>, user: Pick<User, 'id'>) {
+    const isOrganizationExist = await OrganizationsModel.findOne({ where: { ownerId: user.id } });
+    if (isOrganizationExist) throw new Error('user already has an organization');
     const organization = await OrganizationsModel.create({ ...data, ownerId: user.id } as any);
     await UsersModel.update({ organizationId: organization.id }, { where: { id: user.id } });
     return organization;

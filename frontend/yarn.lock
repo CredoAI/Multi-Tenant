@@ -1723,15 +1723,20 @@ react-router@^7.9.1:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
 
+react-uuid@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-uuid/-/react-uuid-2.0.0.tgz#e3c97e190db9eef53cb9dacfcc7314d913a411fa"
+  integrity sha512-FNUH/8WR/FEtx0Bu6gmt1eONfc413hhvrEXFWUSFGvznUhI4dYoVZA09p7JHoTpnM4WC2D/bG2YSxGKXF4oVLg==
+
 react@^19.1.1:
   version "19.1.1"
   resolved "https://registry.yarnpkg.com/react/-/react-19.1.1.tgz#06d9149ec5e083a67f9a1e39ce97b06a03b644af"
   integrity sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==
 
-recoil@^0.7.7:
-  version "0.7.7"
-  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.7.7.tgz#c5f2c843224384c9c09e4a62c060fb4c1454dc8e"
-  integrity sha512-8Og5KPQW9LwC577Vc7Ug2P0vQshkv1y3zG3tSSkWMqkWSwHmE+by06L8JtnGocjW6gcCvfwB3YtrJG6/tWivNQ==
+recoil@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/recoil/-/recoil-0.7.1.tgz#ff78f56d97358fac2ea5f4e2865a1eb74aa20208"
+  integrity sha512-gRaiLLZKfAMe/QszIY1OLzNdd9m3Hf57c1b6bWrdZvOksw7Mr6c5YPThOh+HORbZ/cJV0L82OCH2sPyAr05oBw==
   dependencies:
     hamt_plus "1.0.2"
 

@@ -5,7 +5,7 @@ import { UsersModel } from './users.model';
 import { DbModels } from '.';
 import { ModelNames } from './model-names';
 import { NotificationAttributes } from '../types/notification';
-import { NotificationPriority, NotificationStatus } from '../data/data-types';
+import { NotificationPriority, NotificationStatus, RelatedEntityType } from '../data/data-types';
 
 // Define the Notification model class
 class NotificationModel
@@ -18,12 +18,10 @@ class NotificationModel
   public title!: string;
   declare message: string;
   declare priority: NotificationPriority;
-  declare status: NotificationStatus;
-  declare relatedEntityType: string | null;
-  declare relatedEntityId: string | null;
-  declare actionRequired: boolean;
-  declare actionUrl: string | null;
-  declare expiresAt: Date | null;
+  declare status: `${NotificationStatus}`;
+  declare relatedEntityType: RelatedEntityType;
+  declare recipientType: 'tenant' | 'admin';
+  declare requestId: string | null;
   declare readAt: Date | null;
 
   // Association methods
@@ -42,11 +40,6 @@ class NotificationModel
       foreignKey: 'senderUserId',
       as: 'SenderUser',
     });
-
-    this.hasMany(models.OrganizationsModel, {
-      foreignKey: 'organizationId',
-      as: 'Notifications',
-    });
   }
 }
 
@@ -63,7 +56,7 @@ NotificationModel.init(
       type: DataTypes.UUID, // Foreign key to Organization (nullable for system notifications)
       allowNull: true, // Can be null for system-wide notifications
       references: {
-        model: 'organizations', // Reference to organizations table
+        model: ModelNames.Organizations, // Reference to organizations table
         key: 'id', // Reference to id column
       },
       onUpdate: 'CASCADE', // Update notification if organization changes
@@ -73,7 +66,17 @@ NotificationModel.init(
       type: DataTypes.UUID, // Foreign key to User (who sent the notification)
       allowNull: true, // Can be null for system-generated notifications
       references: {
-        model: 'users', // Reference to users table
+        model: ModelNames.Users, // Reference to users table
+        key: 'id', // Reference to id column
+      },
+      onUpdate: 'CASCADE', // Update notification if sender user changes
+      onDelete: 'SET NULL', // Keep notification if sender user is deleted
+    },
+    requestId: {
+      type: DataTypes.UUID, // Foreign key to User (who sent the notification)
+      allowNull: true, // Can be null for system-generated notifications
+      references: {
+        model: ModelNames.Request, // Reference to users table
         key: 'id', // Reference to id column
       },
       onUpdate: 'CASCADE', // Update notification if sender user changes
@@ -95,48 +98,25 @@ NotificationModel.init(
       },
     },
     priority: {
-      type: DataTypes.STRING(20), // Priority level (low, medium, high, urgent)
+      type: DataTypes.ENUM, // Priority level (low, medium, high, urgent)
       allowNull: false, // Required field
       defaultValue: 'medium', // Default priority
-      validate: {
-        isIn: [['low', 'medium', 'high', 'urgent']], // Only allowed values
-      },
+      values: [...Object.values(NotificationPriority)],
     },
     status: {
-      type: DataTypes.STRING(20), // Current status of notification
+      type: DataTypes.ENUM, // Current status of notification
       allowNull: false, // Required field
       defaultValue: 'unread', // Default status
-      validate: {
-        isIn: [['unread', 'read', 'archived', 'dismissed']], // Allowed status values
-      },
+      values: [...Object.values(NotificationStatus)],
     },
     relatedEntityType: {
-      type: DataTypes.STRING(50), // Type of entity this notification relates to
-      allowNull: true, // Optional field
-      validate: {
-        len: [0, 50], // Length up to 50 characters
-      },
+      type: DataTypes.ENUM, // Type of entity this notification relates to
+      allowNull: false, // Optional field
+      values: [...Object.values(RelatedEntityType)],
     },
-    relatedEntityId: {
-      type: DataTypes.UUID, // ID of the related entity
-      allowNull: true, // Optional field
-    },
-    actionRequired: {
-      type: DataTypes.BOOLEAN, // Whether user action is required
-      allowNull: false, // Required field
-      defaultValue: false, // Default to no action required
-    },
-    actionUrl: {
-      type: DataTypes.STRING(500), // URL for taking action on notification
-      allowNull: true,
-      validate: {
-        len: [0, 500],
-        isUrl: true,
-      },
-    },
-    expiresAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
+    recipientType: {
+      type: DataTypes.ENUM('tenant', 'admin'),
+      allowNull: false,
     },
     readAt: {
       type: DataTypes.DATE,
@@ -152,19 +132,10 @@ NotificationModel.init(
         fields: ['organizationId'],
       },
       {
-        fields: ['recipientUserId'], // Index for user-specific notifications
-      },
-      {
-        fields: ['status'], // Index for status-based filtering
-      },
-      {
-        fields: ['priority'], // Index for priority-based sorting
-      },
-      {
-        fields: ['expiresAt'], // Index for expiration queries
+        fields: ['senderUserId'],
       },
     ],
   }
 );
 
-export default Notification;
+export { NotificationModel };

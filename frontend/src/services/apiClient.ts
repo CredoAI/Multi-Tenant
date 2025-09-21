@@ -5,6 +5,7 @@ export const API_ROUTES = {
   LOGIN: `${API_BASE_URL}/user/login`,
   SIGNUP: `${API_BASE_URL}/user/sign-up`,
   CREATE_ORGANIZATION: `${API_BASE_URL}/organization/create`,
+  GET_OGANIZATION: `${API_BASE_URL}/organization/get-organization`,
   CURRENT_USER: `${API_BASE_URL}/user/current-user`,
 } as const;
 

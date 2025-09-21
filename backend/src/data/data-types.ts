@@ -68,6 +68,12 @@ export enum NotificationPriority {
   URGENT = 'urgent'
 }
 
+export enum RelatedEntityType {
+  CatalogRequest = 'CatalogRequest',
+  ProductRequest = 'ProductRequest',
+  OrderRequest = 'OrderRequest',
+}
+
 export enum NotificationStatus {
   UNREAD = 'unread',
   READ = 'read',
@@ -79,8 +85,6 @@ export enum RequestStatus {
   PENDING = 'pending',
   APPROVED = 'approved',
   REJECTED = 'rejected',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed'
 }
 
 export enum UserRole {

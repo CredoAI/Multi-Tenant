@@ -5,32 +5,33 @@ import AuthCard from '../../components/molecules/AuthCard/AuthCard';
 import Input from '../../components/atoms/Input/Input';
 import { OrganizationService } from '../../services/organizationService';
 import { FormErrorDisplay } from '../../components/atoms/common/FormErrorDisplay';
+import { useNavigate } from 'react-router';
 
 export const businessTypes = [
-  { id: "restaurant", name: "Restaurant" },
-  { id: "cafe", name: "Cafe" },
-  { id: "barbershop", name: "Barbershop" },
-  { id: "beauty-salon", name: "Beauty Salon" },
-  { id: "ladies-wear", name: "Ladies Wear" },
-  { id: "men-wear", name: "Men Wear" },
-  { id: "clothing-store", name: "Clothing Store" },
-  { id: "shoe-store", name: "Shoe Store" },
-  { id: "electronics-store", name: "Electronics Store" },
-  { id: "mobile-shop", name: "Mobile Shop" },
-  { id: "supermarket", name: "Supermarket" },
-  { id: "bakery", name: "Bakery" },
-  { id: "pharmacy", name: "Pharmacy" },
-  { id: "clinic", name: "Clinic" },
-  { id: "dentist", name: "Dentist" },
-  { id: "gym", name: "Gym" },
-  { id: "spa", name: "Spa" },
-  { id: "mechanic", name: "Mechanic" },
-  { id: "car-wash", name: "Car Wash" },
-  { id: "bookstore", name: "Bookstore" },
-  { id: "gift-shop", name: "Gift Shop" },
-  { id: "furniture-store", name: "Furniture Store" },
-  { id: "ecommerce", name: "Ecommerce" },
-  { id: "other", name: "Other" },
+  { id: 'restaurant', name: 'Restaurant' },
+  { id: 'cafe', name: 'Cafe' },
+  { id: 'barbershop', name: 'Barbershop' },
+  { id: 'beauty-salon', name: 'Beauty Salon' },
+  { id: 'ladies-wear', name: 'Ladies Wear' },
+  { id: 'men-wear', name: 'Men Wear' },
+  { id: 'clothing-store', name: 'Clothing Store' },
+  { id: 'shoe-store', name: 'Shoe Store' },
+  { id: 'electronics-store', name: 'Electronics Store' },
+  { id: 'mobile-shop', name: 'Mobile Shop' },
+  { id: 'supermarket', name: 'Supermarket' },
+  { id: 'bakery', name: 'Bakery' },
+  { id: 'pharmacy', name: 'Pharmacy' },
+  { id: 'clinic', name: 'Clinic' },
+  { id: 'dentist', name: 'Dentist' },
+  { id: 'gym', name: 'Gym' },
+  { id: 'spa', name: 'Spa' },
+  { id: 'mechanic', name: 'Mechanic' },
+  { id: 'car-wash', name: 'Car Wash' },
+  { id: 'bookstore', name: 'Bookstore' },
+  { id: 'gift-shop', name: 'Gift Shop' },
+  { id: 'furniture-store', name: 'Furniture Store' },
+  { id: 'ecommerce', name: 'Ecommerce' },
+  { id: 'other', name: 'Other' },
 ] as const;
 
 const CreateOrganizationPage: React.FC = () => {
@@ -38,6 +39,9 @@ const CreateOrganizationPage: React.FC = () => {
   const [selectedBusinessType, setSelectedBusinessType] = useState('');
   const [errors, setErrors] = useState<{ name?: string; businessType?: string }>({});
   const [error, setError] = useState<string | null>(null);
+
+
+  const navigation = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -64,12 +68,12 @@ const CreateOrganizationPage: React.FC = () => {
     setErrors({});
 
     setIsLoading(true);
-    console.log('Creating organization:', { organizationName, selectedBusinessType });
 
     try {
       const { createOrganization } = new OrganizationService();
       await createOrganization(organizationName, selectedBusinessType);
       setIsLoading(false);
+      navigation('/app');
     } catch (err: any) {
       setIsLoading(false);
       // Handle different error types

@@ -1,15 +1,11 @@
-import type { BusinessType, WhatSappConnectionStatus } from "../data/data-types";
+import type { BusinessType } from '../data/data-types';
+import type { IWhatSappSettings } from './whatsapp';
 
 export interface IOrganization {
   id: string; // uuid
   name: string;
-  email: string;
-  password: string;
   brandTone: string;
-  businessType: BusinessType;
-  whatsappBusinessId?: string | null;
-  whatsappPhoneNumberId?: string | null;
-  whatsappStatus: WhatSappConnectionStatus;
-  whatsappTemplates: string[];
-  AIAssistantName?: string | null;
+  businessType: `${BusinessType}`;
+  AIAssistantName:string
+  Whatsappsettings: IWhatSappSettings[];
 }

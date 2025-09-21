@@ -11,7 +11,7 @@ const SignUpPage: React.FC = () => {
   const handleSignUp = async (email: string, password: string, name: string) => {
     const authService = new AuthService();
     const { data } = await authService.signUp({ email, password, name });
-    if (data) alert('SignUp successful!' + JSON.stringify(data));
+    if (data) navigate("/app");
   };
 
   const handleGoogleSignUp = () => {

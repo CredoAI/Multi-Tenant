@@ -4,7 +4,10 @@ import { OrganizationController } from '../controllers/organization.controller';
 import { APIResponseFormat } from '../types/apiTypes';
 import { IOrganization } from '../types/organization';
 import { errorLogger } from '../helpers/logger';
-import { authMiddleware } from '../middleware/authentication';
+import { authMiddleware, TokenPayload } from '../middleware/authentication';
+import { UserController } from '../controllers/user.controller';
+import { UsersModel } from '../models/users.model';
+import { generateTokens } from '../utils/jwt';
 
 const organizationRoute = express.Router();
 
@@ -23,6 +26,28 @@ organizationRoute.post(
         data,
       };
 
+      const realUser = await UsersModel.findByPk(user!.id);
+      const payload = {
+        id: realUser!.id,
+        organizationId: realUser!.organizationId || '',
+        email: realUser!.email,
+        userType: realUser!.userType,
+      };
+
+      // Generate tokens
+      const { accessToken, refreshToken } = generateTokens(payload);
+      const token = {
+        access_token: accessToken,
+        refresh_token: refreshToken,
+        expires_in: 900, // 15 minutes = 900 seconds
+      };
+      
+      res.cookie('auth_tokens', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+      });
       res.status(201).json(response);
     } catch (error: any) {
       const response: APIResponseFormat<null> = {
@@ -56,7 +81,7 @@ organizationRoute.post('/update-organization', authMiddleware, async (req, res) 
 
 organizationRoute.get('/get-organization', authMiddleware, async (req, res) => {
   try {
-    const data = await OrganizationController.getOrganization(req.query.id as string);
+    const data = await OrganizationController.getOrganization(req.query.id as string, req.user as any);
     const response: APIResponseFormat<any> = {
       message: 'request successfully',
       data,

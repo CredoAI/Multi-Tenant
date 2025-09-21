@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (email: string, password: string) => {
     const authService = new AuthService();
     const { data } = await authService.login(email, password);
-    if (data) alert('Login successful!' + JSON.stringify(data));
+    if (data) navigate('/app');
   };
 
   const handleGoogleLogin = () => {
