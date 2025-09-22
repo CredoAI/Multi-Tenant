@@ -8,7 +8,6 @@ import {
   FiRefreshCw,
   FiUsers,
   FiMenu,
-  FiX,
   FiLogOut,
   FiPieChart,
 } from 'react-icons/fi';
