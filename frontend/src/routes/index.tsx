@@ -5,6 +5,7 @@ import TenantRoutes from './TenantRoutes';
 import AdminRoutes from './AdminRoutes';
 import AuthRoutes from './AuthRoute';
 import { contextLoader } from '../contexts/TenantContext';
+import AdminAuthRoutes from './AdminAuthRoute';
 
 export const PageRoutes = {
   LOGIN: 'sign-in',
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: '/admin/*',
     element: <AdminRoutes />,
+  },
+  {
+    path: '/admin/auth/*',
+    element: <AdminAuthRoutes />,
   },
 ]);
 

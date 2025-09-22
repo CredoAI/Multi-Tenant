@@ -26,10 +26,23 @@ export const RootLoaderWrapper = ({ data, children }: { data: any; children: Rea
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (data?.user) setUser(data.user);
-    else navigate(`/app/auth/${PageRoutes.LOGIN}`);
-    if (data?.org) setOrg(data.org);
-    else navigate(`/app/auth/${PageRoutes.CREATE_ORGANIZATION}`);
+    if (!data) return;
+    if (data.user) {
+      setUser(data.user);
+    }
+
+    if (data.org) {
+      setOrg(data.org);
+    }
+
+    // 🔑 Handle redirects once, based on missing data
+    if (!data.user) {
+      navigate(`/app/auth/${PageRoutes.LOGIN}`, { replace: true });
+    } 
+    
+    else if (!data.org) {
+      navigate(`/app/auth/${PageRoutes.CREATE_ORGANIZATION}`, { replace: true });
+    }
   }, [data, setUser, setOrg]);
 
   return <>{children}</>;

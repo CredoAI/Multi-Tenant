@@ -1,4 +1,3 @@
-// apiClient.ts
 const API_BASE_URL = 'http://localhost:4000/api';
 
 export const API_ROUTES = {
@@ -7,9 +6,9 @@ export const API_ROUTES = {
   CREATE_ORGANIZATION: `${API_BASE_URL}/organization/create`,
   GET_OGANIZATION: `${API_BASE_URL}/organization/get-organization`,
   CURRENT_USER: `${API_BASE_URL}/user/current-user`,
+  ADMIN_LOGIN: `${API_BASE_URL}/app-user/login`,
 } as const;
 
-// 🔒 Union of the keys ("LOGIN" | "SIGNUP" | "CREATE_ORGANIZATION")
 export type ApiRouteName = keyof typeof API_ROUTES;
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -22,7 +21,7 @@ interface ApiOptions {
 }
 
 export async function ApiClient<T>(
-  route: ApiRouteName, // pass the NAME, not the URL
+  route: ApiRouteName,
   { method = 'GET', body, headers = {}, credentials = 'include' }: ApiOptions = {}
 ): Promise<T> {
   const url = API_ROUTES[route]; // resolve to actual URL
