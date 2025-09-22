@@ -16,12 +16,14 @@ import { ProductOptionModel } from './product-option.model';
 import { ProductOptionChoiceModel } from './product-option-choice.model';
 import { NotificationModel } from './notification.model';
 import { RequestModel } from './request.module';
+import { AdminUserModel } from './admin-user.model';
 
 interface DbModels {
   OrganizationsModel: typeof OrganizationsModel;
   WhatSappSettingsModel: typeof WhatSappSettingsModel;
   BranchesModel: typeof BranchesModel;
   UsersModel: typeof UsersModel;
+  AdminUserModel: typeof AdminUserModel;
   ProductModel: typeof ProductModel;
   ZoneModel: typeof ZoneModel;
   AreaModel: typeof AreaModel;
@@ -39,6 +41,7 @@ interface DbModels {
 
 const models: DbModels = {
   UsersModel,
+  AdminUserModel,
   OrganizationsModel,
   WhatSappSettingsModel,
   ProductModel,

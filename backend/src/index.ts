@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import cookieParser from "cookie-parser";
+import cookieParser from 'cookie-parser';
 import { connectDB } from './models';
 import { appConfig } from './config';
 import { organizationRoute } from './routes/organization.route';
@@ -14,6 +14,9 @@ import { productRoute } from './routes/product.route';
 import { subscriptionRoute } from './routes/subscription-plan.route';
 import { productOptionRoute } from './routes/product-option.route';
 import { productOptionChoiceRoute } from './controllers/productOption-choice.route';
+import { requestRoute } from './routes/request.route';
+import { adminUserRoute } from './routes/admin-user.route';
+import { appUserAuthSecretValidation } from './middleware/authentication';
 
 const app = express();
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
@@ -30,9 +33,13 @@ app.use('/api/organization/branch', branchRoute);
 app.use('/api/organization/product', productRoute);
 app.use('/api/organization/product-option', productOptionRoute);
 app.use('/api/organization/product-option-choice', productOptionChoiceRoute);
+app.use('/api/organization/request', requestRoute);
 
 // app-user routes
-app.use('/api/app-user/subscription-plan', subscriptionRoute);
+app.use('/api/app-user/subscription-plan', appUserAuthSecretValidation, subscriptionRoute);
+app.use('/api/app-user', appUserAuthSecretValidation, adminUserRoute);
+app.use('/api/app-user/request', appUserAuthSecretValidation, requestRoute);
+
 
 const PORT = appConfig.port;
 app.listen(PORT, async () => {

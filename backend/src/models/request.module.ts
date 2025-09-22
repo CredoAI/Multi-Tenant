@@ -4,12 +4,12 @@ import { OrganizationsModel } from './organizations.model';
 import { UsersModel } from './users.model';
 import { DbModels } from '.';
 import { ModelNames } from './model-names';
-import { RequestStatus } from '../data/data-types';
-import { RequestAttributes } from '../types/notification';
+import { RelatedEntityType, RequestStatus } from '../data/data-types';
+import { BaseRequestAttributes, RequestAttributes } from '../types/notification';
 
 class RequestModel
   extends Model<InferAttributes<RequestModel>, InferCreationAttributes<RequestModel>>
-  implements RequestAttributes
+  implements BaseRequestAttributes
 {
   declare id: string;
   declare organizationId: string;
@@ -17,6 +17,7 @@ class RequestModel
   declare title: string;
   declare description: string;
   declare status: `${RequestStatus}`;
+  declare requestType: `${RelatedEntityType}`;
   declare data: any;
   declare approvedByUserId: string | null;
   declare approvedAt: Date | null;
@@ -82,6 +83,11 @@ RequestModel.init(
       type: DataTypes.ENUM,
       values: [...Object.values(RequestStatus)],
       defaultValue: RequestStatus.PENDING,
+    },
+    requestType: {
+      type: DataTypes.ENUM,
+      values: [...Object.values(RelatedEntityType)],
+      allowNull: false,
     },
     data: {
       type: DataTypes.JSONB,

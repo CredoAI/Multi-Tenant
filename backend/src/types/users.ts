@@ -18,3 +18,11 @@ export interface User {
   password: string;
   userType: `${UserTypes}`;
 }
+
+export interface AdminUser {
+  id: string;
+  type: 'admin';
+  name: string;
+  email: string;
+  password: string;
+}

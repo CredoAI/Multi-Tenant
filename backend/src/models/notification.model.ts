@@ -21,7 +21,6 @@ class NotificationModel
   declare status: `${NotificationStatus}`;
   declare relatedEntityType: RelatedEntityType;
   declare recipientType: 'tenant' | 'admin';
-  declare requestId: string | null;
   declare readAt: Date | null;
 
   // Association methods
@@ -67,16 +66,6 @@ NotificationModel.init(
       allowNull: true, // Can be null for system-generated notifications
       references: {
         model: ModelNames.Users, // Reference to users table
-        key: 'id', // Reference to id column
-      },
-      onUpdate: 'CASCADE', // Update notification if sender user changes
-      onDelete: 'SET NULL', // Keep notification if sender user is deleted
-    },
-    requestId: {
-      type: DataTypes.UUID, // Foreign key to User (who sent the notification)
-      allowNull: true, // Can be null for system-generated notifications
-      references: {
-        model: ModelNames.Request, // Reference to users table
         key: 'id', // Reference to id column
       },
       onUpdate: 'CASCADE', // Update notification if sender user changes

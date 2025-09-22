@@ -11,8 +11,15 @@ declare global {
       userType: `${UserTypes}`;
     }
 
+    interface AdminUserPayload {
+      id: string;
+      email: string;
+      type: 'admin';
+    }
+
     interface Request {
       user?: UserPayload;
+      adminUser?: AdminUserPayload;
     }
   }
 }
