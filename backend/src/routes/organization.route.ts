@@ -8,6 +8,7 @@ import { authMiddleware, TokenPayload } from '../middleware/authentication';
 import { UserController } from '../controllers/user.controller';
 import { UsersModel } from '../models/users.model';
 import { generateTokens } from '../utils/jwt';
+import { setAuthHeaderCookie } from '../helpers/set-auth-header';
 
 const organizationRoute = express.Router();
 
@@ -41,13 +42,8 @@ organizationRoute.post(
         refresh_token: refreshToken,
         expires_in: 900, // 15 minutes = 900 seconds
       };
-      
-      res.cookie('auth_tokens', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24, // 1 day
-      });
+
+      setAuthHeaderCookie(res, token, 'auth_tokens');
       res.status(201).json(response);
     } catch (error: any) {
       const response: APIResponseFormat<null> = {

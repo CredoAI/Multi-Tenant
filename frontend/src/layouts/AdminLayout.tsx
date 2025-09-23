@@ -1,5 +1,5 @@
 // src/components/layouts/AdminLayout/AdminLayout.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FiHome,
   FiSettings,
@@ -12,6 +12,8 @@ import {
   FiPieChart,
 } from 'react-icons/fi';
 import { Link, useLocation, useNavigate } from 'react-router';
+import { useAdminUserValue } from '../store/admin/authAtoms';
+import type { AdminUser } from '../types/users';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -19,16 +21,15 @@ interface AdminLayoutProps {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState<AdminUser>();
   const location = useLocation();
   const navigate = useNavigate();
+  const adminUser = useAdminUserValue();
 
-  // Mock data for admin user
-  const adminData = {
-    name: 'Admin User',
-    role: 'Super Admin',
-    photoUrl:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=32&h=32&q=80',
-  };
+  useEffect(() => {
+    if (!adminUser) return;
+    setUser(adminUser);
+  }, [adminUser]);
 
   // Navigation items for admin
   const navigationItems = [
@@ -139,8 +140,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
               {/* User profile placeholder */}
               <div className="flex items-center space-x-2">
-                <img src={adminData.photoUrl} alt="Admin profile" className="w-8 h-8 rounded-full" />
-                <span className="text-sm font-medium text-neutral-700 hidden md:inline-block">{adminData.name}</span>
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-500 text-white font-bold">
+                  {user?.name?.charAt(0).toUpperCase() || 'A'}
+                </div>
+                <span className="text-sm font-medium text-neutral-700 hidden md:inline-block">{user?.name}</span>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { OrganizationsModel } from '../models/organizations.model';
 import { UsersModel } from '../models/users.model';
 import { IOrganization } from '../types/organization';
 import { User } from '../types/users';
+import { NotificationModel } from '../models/notification.model';
 
 export class OrganizationService {
   constructor() {}
@@ -35,7 +36,11 @@ export class OrganizationService {
         },
         {
           model: WhatSappSettingsModel,
-          as: 'Whatsappsettings',
+          as: 'whatsappsettings',
+        },
+        {
+          model: NotificationModel,
+          as: 'notifications',
         },
         {
           model: UsersModel,

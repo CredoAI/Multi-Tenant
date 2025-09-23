@@ -1,6 +1,7 @@
 import { appConfig } from '../config';
 import { WhatSappConnectionStatus } from '../data/data-types';
 import { WhatSappSettingsModel } from '../models/whatsapp-settings.model';
+import { User } from '../types/users';
 import {
   RegisterPhoneNumberArg,
   WhatSappAuthPayload,
@@ -44,6 +45,20 @@ export class WhatSappSettingsService {
 
     const data = (await res.json()) as { access_token: string; token_type: string };
     console.log(`✅------------accessToken successful:${data}`);
+
+    const meData = await fetch(`https://graph.facebook.com/v21.0/me/owned_businesses`, {
+      headers: {
+        Authorization: `Bearer ${data.access_token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!meData.ok) {
+      const errorData = await res.json();
+      throw new Error(`meData Error ${res.status}: ${errorData.error.message}`);
+    }
+
+    return await meData.json();
     const isSubscribedToWebhook = await this.subScribeWhatSappToWebHook({
       whatsappBusinessId: whatsappBusinessId,
       accessToken: data.access_token,
@@ -130,5 +145,9 @@ export class WhatSappSettingsService {
       throw new Error(`Error ${resRegister.status}: ${errorData.error.message}`);
     }
     return phoneNumber;
+  }
+
+  static async mockAddWhsappData(data: any, user: Pick<User, 'id' | 'organizationId'>) {
+    return await WhatSappSettingsModel.create({ ...data, organizationId: user.organizationId });
   }
 }

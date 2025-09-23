@@ -1,4 +1,6 @@
-import { API_ROUTES } from '../apiClient';
+import type { BaseRequestAttributes } from '../../types/request';
+import type { AdminUser } from '../../types/users';
+import { API_ROUTES, ApiClient } from '../apiClient';
 
 export class AdminUserService {
   constructor() {}
@@ -18,5 +20,21 @@ export class AdminUserService {
     if (!res.ok) throw data;
 
     return data;
+  }
+
+  async fetchCurrentUser(): Promise<Promise<{ data: AdminUser; message: string }>> {
+    return await ApiClient('CURRENT_ADMIN_USER', {
+      headers: {
+        'app-user-secret': import.meta.env.VITE_ADMIN_SECET,
+      },
+    });
+  }
+
+  async getRequests(): Promise<Promise<{ data: BaseRequestAttributes; message: string }>> {
+    return await ApiClient("ADMIN_GET_REQUESTS", {
+      headers: {
+        'app-user-secret': import.meta.env.VITE_ADMIN_SECET,
+      },
+    });
   }
 }

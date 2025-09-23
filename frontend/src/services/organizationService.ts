@@ -14,4 +14,15 @@ export class OrganizationService {
   async getOrganization(): Promise<{ data: IOrganization; message: string }> {
     return await ApiClient('GET_OGANIZATION');
   }
+
+  async updateOrganization(data: IOrganization): Promise<{ data: IOrganization; message: string }> {
+    return await ApiClient('UPDATE_ORGANIZATION', {
+      method: 'POST',
+      body: data,
+    });
+  }
+
+  async getWhatsappAuthUrl(): Promise<{ data: { authUrl: string }; message: string }> {
+    return await ApiClient('WHATSAPP_AUTH');
+  }
 }

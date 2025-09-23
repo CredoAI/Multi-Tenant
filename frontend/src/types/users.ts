@@ -8,3 +8,10 @@ export interface User {
   password: string;
   userType: UserTypes;
 }
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  type: 'admin';
+}

@@ -52,7 +52,7 @@ WhatSappSettingsModel.init(
     },
     accessToken: { type: DataTypes.STRING, allowNull: true },
     token_type: { type: DataTypes.STRING, allowNull: true },
-    isSubscribedToWebhook: { type: DataTypes.BOOLEAN, allowNull: false },
+    isSubscribedToWebhook: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     whatsappTemplates: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false, defaultValue: [] },
     catalogId: { type: DataTypes.STRING, defaultValue: '' },
   },

@@ -19,7 +19,7 @@ import { adminUserRoute } from './routes/admin-user.route';
 import { appUserAuthSecretValidation } from './middleware/authentication';
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: ['http://localhost:5173', true], credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 

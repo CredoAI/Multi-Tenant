@@ -44,4 +44,8 @@ export class RequestService {
       { where: { id: requestData.id } }
     );
   }
+
+  static async getRequest() {
+    return await RequestModel.findAll({ where: { status: RequestStatus.PENDING } });
+  }
 }

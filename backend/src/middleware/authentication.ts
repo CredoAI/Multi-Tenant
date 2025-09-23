@@ -3,6 +3,7 @@ import { generateTokens, verifyToken } from '../utils/jwt';
 import jwt from 'jsonwebtoken';
 import { UserService } from '../services/users.service';
 import { appConfig } from '../config';
+import { setAuthHeaderCookie } from '../helpers/set-auth-header';
 
 export interface TokenPayload {
   access_token: string;
@@ -13,7 +14,7 @@ export interface TokenPayload {
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 1. Get token from header or cookie
-    const headerToken = req.headers['authorization']
+    const headerToken = req.headers['authorization'];
     const tokens = req.cookies['auth_tokens'] as TokenPayload | undefined;
 
     if (!headerToken && !tokens) {
@@ -33,12 +34,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         try {
           const newTokens = await UserService.refreshToken(tokens.refresh_token);
 
-          res.cookie('auth_tokens', newTokens, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
-          });
+          setAuthHeaderCookie(res, newTokens, "auth_tokens");
 
           const { id, organizationId, email, userType } = verifyToken(newTokens.access_token, 'access') as any;
           req.user = { id, organizationId, email, userType };
@@ -90,12 +86,7 @@ export const adminAuthMiddleware = async (req: Request, res: Response, next: Nex
             refresh_token: refreshToken,
             expires_in,
           };
-          res.cookie('auth_tokens', newTokens, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
-          });
+         setAuthHeaderCookie(res, newTokens, "auth_tokens");
 
           const { id, email, type } = verifyToken(newTokens.access_token, 'access') as any;
           req.adminUser = { id, email, type };

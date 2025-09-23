@@ -43,4 +43,22 @@ WhatSappRoute.post('/exchange-whatsapp-code-for-access-token', validateWhatsappS
   }
 });
 
+WhatSappRoute.post('/mock-add-data', authMiddleware, async (req, res) => {
+  try {
+    const data = await WhatSappSettingsController.mockAddWhsappData(req.body, req.user!);
+    const response: APIResponseFormat<any> = {
+      message: 'data added successfully',
+      data,
+    };
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
+
 export { WhatSappRoute };

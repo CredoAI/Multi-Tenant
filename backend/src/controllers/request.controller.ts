@@ -10,4 +10,7 @@ export class RequestController {
   static async approveRequest(requestData: RequestAttributes, user: Pick<AdminUser, 'id' | 'email' | 'type'>) {
     return await RequestService.approveRequest(requestData, user);
   }
+  static async getRequests(){
+    return await RequestService.getRequest()
+  }
 }

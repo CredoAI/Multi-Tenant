@@ -3,6 +3,8 @@ import { AdminUserModel } from '../models/admin-user.model';
 import { generateTokens } from '../utils/jwt';
 import { APIResponseFormat } from '../types/apiTypes';
 import { errorLogger } from '../helpers/logger';
+import { adminAuthMiddleware } from '../middleware/authentication';
+import { setAuthHeaderCookie } from '../helpers/set-auth-header';
 export const adminUserRoute = express.Router();
 
 adminUserRoute.post('/create-user', async (req, res) => {
@@ -35,12 +37,7 @@ adminUserRoute.post('/create-user', async (req, res) => {
       data,
     };
 
-    res.cookie('admin_auth_tokens', data.tokens, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+     setAuthHeaderCookie(res, data.tokens, "admin_auth_tokens");
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {
@@ -83,13 +80,26 @@ adminUserRoute.post('/login', async (req, res) => {
       data,
     };
 
-    res.cookie('admin_auth_tokens', data.tokens, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+     setAuthHeaderCookie(res, data.tokens, "admin_auth_tokens");
+    res.status(201).json(response);
+  } catch (error: any) {
+    const response: APIResponseFormat<null> = {
+      message: error.message,
+      error: error,
+    };
+    errorLogger(error);
+    res.status(500).json(response);
+  }
+});
 
+adminUserRoute.get('/current-user', adminAuthMiddleware, async (req, res) => {
+  try {
+    if (!req.adminUser) throw new Error('internal server error');
+    const data = await AdminUserModel.findByPk(req.adminUser.id);
+    const response: APIResponseFormat<any> = {
+      message: 'admin user logged in successfully',
+      data,
+    };
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {

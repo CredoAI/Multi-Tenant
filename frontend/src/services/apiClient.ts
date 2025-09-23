@@ -4,9 +4,13 @@ export const API_ROUTES = {
   LOGIN: `${API_BASE_URL}/user/login`,
   SIGNUP: `${API_BASE_URL}/user/sign-up`,
   CREATE_ORGANIZATION: `${API_BASE_URL}/organization/create`,
+  UPDATE_ORGANIZATION: `${API_BASE_URL}/organization/update-organization`,
   GET_OGANIZATION: `${API_BASE_URL}/organization/get-organization`,
   CURRENT_USER: `${API_BASE_URL}/user/current-user`,
+  WHATSAPP_AUTH: `${API_BASE_URL}/whatsapp-settings/get-whatsapp-auth-url`,
   ADMIN_LOGIN: `${API_BASE_URL}/app-user/login`,
+  CURRENT_ADMIN_USER: `${API_BASE_URL}/app-user/current-user`,
+  ADMIN_GET_REQUESTS: `${API_BASE_URL}/app-user/request/get-requests`,
 } as const;
 
 export type ApiRouteName = keyof typeof API_ROUTES;

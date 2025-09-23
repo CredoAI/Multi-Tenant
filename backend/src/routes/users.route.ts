@@ -4,6 +4,7 @@ import { validateSignUpSchema } from '../middleware/validation/sign-up';
 import { UserController } from '../controllers/user.controller';
 import { APIResponseFormat } from '../types/apiTypes';
 import { authMiddleware } from '../middleware/authentication';
+import { setAuthHeaderCookie } from '../helpers/set-auth-header';
 
 const userRoute = express.Router();
 
@@ -14,12 +15,8 @@ userRoute.post('/sign-up', validateSignUpSchema(), async (req, res) => {
       message: 'user created successfully',
       data,
     };
-    res.cookie('auth_tokens', data.tokens, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+
+    setAuthHeaderCookie(res, data.tokens, 'auth_tokens');
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {
@@ -74,12 +71,8 @@ userRoute.post('/exchange-google-auth-code-signup', async (req, res) => {
       message: 'google auth is successfully',
       data,
     };
-    res.cookie('auth_tokens', data.tokens, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+
+    setAuthHeaderCookie(res, data.tokens, 'auth_tokens');
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {
@@ -98,12 +91,8 @@ userRoute.post('/exchange-google-auth-code-signin', async (req, res) => {
       message: 'google auth is successfully',
       data,
     };
-    res.cookie('auth_tokens', data.tokens, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+
+    setAuthHeaderCookie(res, data.tokens, 'auth_tokens');
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {
@@ -122,12 +111,8 @@ userRoute.post('/login', async (req, res) => {
       message: 'login successfully',
       data,
     };
-    res.cookie('auth_tokens', data.tokens, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+
+    setAuthHeaderCookie(res, data.tokens, 'auth_tokens');
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {
@@ -147,12 +132,8 @@ userRoute.post('/refresh-token', async (req, res) => {
       message: 'token refreshed successfully',
       data,
     };
-    res.cookie('auth_tokens', data, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    });
+
+    setAuthHeaderCookie(res, data, 'auth_tokens');
     res.status(201).json(response);
   } catch (error: any) {
     const response: APIResponseFormat<null> = {

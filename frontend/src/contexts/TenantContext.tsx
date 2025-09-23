@@ -1,9 +1,11 @@
 import React from 'react';
 import { OrganizationService } from '../services/organizationService';
 import { UserService } from '../services/userService';
-import { useUserSetRecoilState, useOrgSetRecoilState } from '../store/authAtoms';
+import { useUserSetRecoilState, useOrgSetRecoilState, useWhatsappSetRecoilState } from '../store/authAtoms';
 import { useNavigate } from 'react-router';
 import { PageRoutes } from '../routes';
+import type { User } from '../types/users';
+import type { OrganizationPayload } from '../types/organization';
 
 export async function contextLoader() {
   try {
@@ -20,9 +22,16 @@ export async function contextLoader() {
   }
 }
 
-export const RootLoaderWrapper = ({ data, children }: { data: any; children: React.ReactNode }) => {
+export const RootLoaderWrapper = ({
+  data,
+  children,
+}: {
+  data: { user: User; org: OrganizationPayload };
+  children: React.ReactNode;
+}) => {
   const setUser = useUserSetRecoilState();
   const setOrg = useOrgSetRecoilState();
+  const setWhatsapp = useWhatsappSetRecoilState();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -33,14 +42,15 @@ export const RootLoaderWrapper = ({ data, children }: { data: any; children: Rea
 
     if (data.org) {
       setOrg(data.org);
+      if (data.org.whatsappsettings) {
+        setWhatsapp(data.org.whatsappsettings[0]);
+      }
     }
 
     // 🔑 Handle redirects once, based on missing data
     if (!data.user) {
       navigate(`/app/auth/${PageRoutes.LOGIN}`, { replace: true });
-    } 
-    
-    else if (!data.org) {
+    } else if (!data.org) {
       navigate(`/app/auth/${PageRoutes.CREATE_ORGANIZATION}`, { replace: true });
     }
   }, [data, setUser, setOrg]);

@@ -1,9 +1,12 @@
-import { Navigate, Route, Routes } from 'react-router';
+import { Navigate, Route, Routes, useLoaderData } from 'react-router';
 import AdminLayout from '../layouts/AdminLayout';
 import RequestRoutePage from '../pages/admin/RequestRoutePage';
+import { AdminRootLoaderWrapper } from '../contexts/AdminContext';
 
 export default function AdminRoutes() {
+   const data = useLoaderData();
   return (
+    <AdminRootLoaderWrapper data={data}>
     <AdminLayout>
       <Routes>
         <Route path="/" element={<Navigate to="dashboard" />} />
@@ -12,5 +15,6 @@ export default function AdminRoutes() {
         <Route path="billing" element={<div>billing page</div>} />
       </Routes>
     </AdminLayout>
+    </AdminRootLoaderWrapper>
   );
 }

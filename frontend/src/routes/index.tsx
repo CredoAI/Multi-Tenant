@@ -6,6 +6,8 @@ import AdminRoutes from './AdminRoutes';
 import AuthRoutes from './AuthRoute';
 import { contextLoader } from '../contexts/TenantContext';
 import AdminAuthRoutes from './AdminAuthRoute';
+import { adminContextLoader } from '../contexts/AdminContext';
+import WhatsAppRedirect from '../pages/tenant/WhatsAppRedirect';
 
 export const PageRoutes = {
   LOGIN: 'sign-in',
@@ -37,12 +39,17 @@ const router = createBrowserRouter([
     element: <AuthRoutes />,
   },
   {
+    path: '/app/whatsapp-redirect',
+    element: <WhatsAppRedirect />,
+  },
+  {
     path: '*',
     element: <div>NoFound routes</div>,
   },
   {
     path: '/admin/*',
     element: <AdminRoutes />,
+    loader: adminContextLoader,
   },
   {
     path: '/admin/auth/*',

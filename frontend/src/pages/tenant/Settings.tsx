@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FiSave,
   FiEdit,
@@ -11,49 +11,28 @@ import {
 } from 'react-icons/fi';
 import Button from '../../components/atoms/Button/Button';
 import Input from '../../components/atoms/Input/Input';
-import { useOrgValue } from '../../store/authAtoms';
-import type { IOrganization } from '../../types/organization';
-import type { IWhatSappSettings } from '../../types/whatsapp';
-
-// Mock data based on your schema
-const initialOrganizationData: IOrganization = {
-  id: 'eed', // uuid
-  name: '',
-  brandTone: '',
-  businessType: 'bakery',
-  AIAssistantName: '',
-  Whatsappsettings: [],
-};
-
-const initialWhatsappData: IWhatSappSettings = {
-  id: '11',
-  organizationId: null,
-  whatsappBusinessId: '',
-  whatsappPhoneNumberIds: [],
-  isSubscribedToWebhook: false,
-  connectionStatus: 'not-connected',
-  whatsappTemplates: [],
-  catalogId: '',
-};
+import { useOrgSetRecoilState, useOrgValue, useWhatsappSetRecoilState, useWhatsappValue } from '../../store/authAtoms';
+import { OrganizationService } from '../../services/organizationService';
 
 const SettingsPage: React.FC = () => {
-  const organizationData = useOrgValue();
+  const orgData = useOrgValue();
+  const setOrgData = useOrgSetRecoilState();
+  const whatsappData = useWhatsappValue();
+  const setWhatsappData = useWhatsappSetRecoilState();
 
-  const [orgData, setOrgData] = useState<IOrganization>(initialOrganizationData);
-  const [whatsappData, setWhatsappData] = useState<IWhatSappSettings>(initialWhatsappData);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
+  const { updateOrganization, getWhatsappAuthUrl } = new OrganizationService();
   const handleOrgChange = (field: string, value: string) => {
-    setOrgData((prev) => ({ ...prev, [field]: value }));
+    setOrgData((prev) => ({ ...prev!, [field]: value }));
   };
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await updateOrganization({ ...orgData, organizationId: orgData.id } as any);
       setSaveStatus('success');
       setIsEditing(false);
       setTimeout(() => setSaveStatus('idle'), 3000);
@@ -68,13 +47,8 @@ const SettingsPage: React.FC = () => {
     setIsLoading(true);
     try {
       // Simulate WhatsApp onboarding process
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setWhatsappData((prev: any) => ({
-        ...prev,
-        connectionStatus: 'connected',
-        whatsappPhoneNumberIds: ['+1234567890'],
-        isSubscribedToWebhook: true,
-      }));
+      const { data } = await getWhatsappAuthUrl();
+      window.location.href = data.authUrl;
     } catch (error) {
       console.error('WhatsApp onboarding failed', error);
     } finally {
@@ -88,7 +62,7 @@ const SettingsPage: React.FC = () => {
       // Simulate catalog creation process
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setWhatsappData((prev) => ({
-        ...prev,
+        ...prev!,
         catalogId: 'catalog_12345',
       }));
     } catch (error) {
@@ -97,34 +71,6 @@ const SettingsPage: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    const whatsappData = organizationData?.Whatsappsettings[0];
-    if (whatsappData) {
-      setWhatsappData({
-        id: whatsappData.id,
-        organizationId: whatsappData.organizationId || '',
-        whatsappBusinessId: whatsappData.whatsappBusinessId || '',
-        whatsappPhoneNumberIds: whatsappData.whatsappPhoneNumberIds || [],
-        isSubscribedToWebhook: whatsappData.isSubscribedToWebhook,
-        connectionStatus: whatsappData.connectionStatus,
-        whatsappTemplates: whatsappData.whatsappTemplates || [],
-        catalogId: whatsappData.catalogId || 'erwrwccewqeeqw',
-      });
-    }
-
-    if (organizationData) {
-      setOrgData({
-        id: organizationData.id || '',
-        name: organizationData.name || '',
-        brandTone: organizationData.brandTone || '',
-        businessType: organizationData.businessType || 'bakery',
-        AIAssistantName: organizationData.AIAssistantName || '',
-        Whatsappsettings: [],
-      });
-    }
-
-  }, [organizationData]);
 
   return (
     <div className="space-y-6">
@@ -176,7 +122,7 @@ const SettingsPage: React.FC = () => {
           <div className="space-y-4">
             <Input
               label="Business Name"
-              value={orgData.name}
+              value={orgData?.name || ''}
               onChange={(e) => handleOrgChange('name', e.target.value)}
               disabled={!isEditing}
               required
@@ -185,14 +131,14 @@ const SettingsPage: React.FC = () => {
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-medium text-neutral-700">Business Type</label>
               <div className="px-4 py-3 rounded-lg border border-neutral-300 bg-neutral-50 text-neutral-500">
-                {orgData.businessType.charAt(0).toUpperCase() + orgData.businessType.slice(1)}
+                {orgData && orgData.businessType.charAt(0).toUpperCase() + orgData.businessType.slice(1)}
               </div>
               <p className="text-xs text-neutral-500">Business type cannot be changed after creation</p>
             </div>
 
             <Input
               label="Brand Tone"
-              value={orgData.brandTone}
+              value={orgData?.brandTone}
               onChange={(e) => handleOrgChange('brandTone', e.target.value)}
               disabled={!isEditing}
               placeholder="Describe your brand's communication style"
@@ -221,12 +167,12 @@ const SettingsPage: React.FC = () => {
               <h4 className="font-medium text-neutral-800 mb-2">Connection Status</h4>
               <div
                 className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  whatsappData.connectionStatus === 'connected'
+                  whatsappData?.connectionStatus === 'connected'
                     ? 'bg-success-100 text-success-800'
                     : 'bg-warning-100 text-warning-800'
                 }`}
               >
-                {whatsappData.connectionStatus === 'connected' ? (
+                {whatsappData?.connectionStatus === 'connected' ? (
                   <>
                     <FiCheck className="mr-1" />
                     Connected
@@ -239,7 +185,7 @@ const SettingsPage: React.FC = () => {
                 )}
               </div>
 
-              {whatsappData.connectionStatus !== 'connected' ? (
+              {whatsappData?.connectionStatus !== 'connected' ? (
                 <div className="mt-4">
                   <p className="text-sm text-neutral-600 mb-3">
                     Connect your WhatsApp Business Account to start using AI agents for customer interactions.
@@ -272,7 +218,7 @@ const SettingsPage: React.FC = () => {
             <div>
               <h4 className="font-medium text-neutral-800 mb-2">Product Catalog</h4>
 
-              {whatsappData.catalogId ? (
+              {whatsappData?.catalogId ? (
                 <div>
                   <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-success-100 text-success-800 mb-3">
                     <FiCheck className="mr-1" />
@@ -306,7 +252,7 @@ const SettingsPage: React.FC = () => {
                   <Button
                     onClick={handleCatalogCreation}
                     isLoading={isLoading}
-                    disabled={whatsappData.connectionStatus !== 'connected'}
+                    disabled={whatsappData?.connectionStatus !== 'connected'}
                   >
                     <FiShoppingBag className="mr-2" />
                     Create Product Catalog
