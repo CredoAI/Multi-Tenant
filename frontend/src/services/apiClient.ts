@@ -8,6 +8,7 @@ export const API_ROUTES = {
   GET_OGANIZATION: `${API_BASE_URL}/organization/get-organization`,
   CURRENT_USER: `${API_BASE_URL}/user/current-user`,
   WHATSAPP_AUTH: `${API_BASE_URL}/whatsapp-settings/get-whatsapp-auth-url`,
+  EXCHANGE_WABA_CODE: `${API_BASE_URL}/whatsapp-settings/exchange-whatsapp-code-for-access-token`,
   ADMIN_LOGIN: `${API_BASE_URL}/app-user/login`,
   CURRENT_ADMIN_USER: `${API_BASE_URL}/app-user/current-user`,
   ADMIN_GET_REQUESTS: `${API_BASE_URL}/app-user/request/get-requests`,

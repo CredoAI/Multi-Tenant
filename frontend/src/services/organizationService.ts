@@ -1,5 +1,6 @@
 import type { IOrganization } from '../types/organization';
 import { ApiClient } from './apiClient';
+import type { ExchangeCodeTypes } from '../types/whatsapp';
 
 export class OrganizationService {
   constructor() {}
@@ -22,7 +23,10 @@ export class OrganizationService {
     });
   }
 
-  async getWhatsappAuthUrl(): Promise<{ data: { authUrl: string }; message: string }> {
-    return await ApiClient('WHATSAPP_AUTH');
+  async exchangeCodeForAccessToken(data: ExchangeCodeTypes): Promise<{ data: any; message: string }> {
+    return await ApiClient('EXCHANGE_WABA_CODE', {
+      method: 'POST',
+      body: data,
+    });
   }
 }

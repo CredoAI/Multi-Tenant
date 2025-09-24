@@ -24,6 +24,7 @@ export interface WhatSappAuthPayload {
 export interface RegisterPhoneNumberArg {
   accessToken: string;
   whatsappBusinessId: string;
+  whatsappPhoneNumberId:string
 }
 
 export interface WhatsAppBusinessAccountPhoneNumber {

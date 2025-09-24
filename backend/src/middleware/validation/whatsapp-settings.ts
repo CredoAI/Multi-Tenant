@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 const whatsappSettingsSchema = z.object({
     code:z.string().trim(),
     whatsappBusinessId:z.string().trim(),
-    whatsappPhoneNumberId:z.string().trim().optional()
+    whatsappPhoneNumberId:z.string().trim()
 })
 
 export const validateWhatsappSettingsSchema = () => {

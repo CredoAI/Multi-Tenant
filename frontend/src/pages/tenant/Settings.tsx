@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FiSave,
   FiEdit,
@@ -13,17 +13,24 @@ import Button from '../../components/atoms/Button/Button';
 import Input from '../../components/atoms/Input/Input';
 import { useOrgSetRecoilState, useOrgValue, useWhatsappSetRecoilState, useWhatsappValue } from '../../store/authAtoms';
 import { OrganizationService } from '../../services/organizationService';
+import { useWhatsAppSignup } from '../../hooks/whatsapp';
 
 const SettingsPage: React.FC = () => {
   const orgData = useOrgValue();
   const setOrgData = useOrgSetRecoilState();
   const whatsappData = useWhatsappValue();
   const setWhatsappData = useWhatsappSetRecoilState();
+  const WABA_AUTH_CONFIG = import.meta.env.VITE_META_WABA_CONFIG_AUTH_ID;
+  const WABA_REDIRECT_URL = import.meta.env.VITE_META_REDIRECT_URL;
+  const { status, sdkResponse, sessionInfo, launchWhatsAppSignup } = useWhatsAppSignup(
+    WABA_AUTH_CONFIG,
+    WABA_REDIRECT_URL
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const { updateOrganization, getWhatsappAuthUrl } = new OrganizationService();
+  const { updateOrganization, exchangeCodeForAccessToken } = new OrganizationService();
   const handleOrgChange = (field: string, value: string) => {
     setOrgData((prev) => ({ ...prev!, [field]: value }));
   };
@@ -45,16 +52,34 @@ const SettingsPage: React.FC = () => {
 
   const handleWhatsappOnboarding = async () => {
     setIsLoading(true);
-    try {
-      // Simulate WhatsApp onboarding process
-      const { data } = await getWhatsappAuthUrl();
-      window.location.href = data.authUrl;
-    } catch (error) {
-      console.error('WhatsApp onboarding failed', error);
-    } finally {
-      setIsLoading(false);
-    }
+    launchWhatsAppSignup();
   };
+
+  useEffect(() => {
+    if (!sessionInfo) return;
+    const exchangeCode = async () => {
+      try {
+        if (status === 'ERROR') throw new Error(sessionInfo?.data.error_message || 'something went wrong');
+        if (status === 'CANCEL') throw new Error(`cancel at this step: ${sessionInfo?.data.current_step}`);
+        const WABA = {
+          code: sdkResponse?.authResponse?.code!,
+          whatsappBusinessId: sessionInfo?.data.waba_id!,
+          whatsappPhoneNumberId: sessionInfo?.data.phone_number_id!,
+        };
+        console.log('============sessionInfo====', { sessionInfo, sdkResponse });
+        const { data } = await exchangeCodeForAccessToken(WABA);
+        console.log('=============exchangeCodeForAccessToken=======================');
+        console.log(data);
+        console.log('====================================');
+        setIsLoading(false);
+      } catch (error) {
+        console.error('WhatsApp onboarding failed', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    exchangeCode();
+  }, [sessionInfo, sdkResponse]);
 
   const handleCatalogCreation = async () => {
     setIsLoading(true);
